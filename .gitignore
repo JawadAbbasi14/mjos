@@ -1,0 +1,9 @@
+# Logs tracking rules
+*.log
+
+# Environments and private keys
+.env
+*.pem
+
+# Linux system files
+.directory
