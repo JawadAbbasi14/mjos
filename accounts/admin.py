@@ -1,14 +1,21 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.db import models
 from .models import User
+
 # Register your models here.
-
 class Customeuser(UserAdmin):
-    list_display = ('username','age','bio')
-
-
-filedset = UserAdmin.fieldsets + (
+    # Admin list view mein dikhane ke liye
+    list_display = ('username', 'age', 'bio')
+    
+    # Sahi spelling 'fieldsets' hai aur yeh class ke andar hona chahiye
+    fieldsets = UserAdmin.fieldsets + (
         ('Karobar / Additional Info', {'fields': ('bio', 'age')}),
     )
-admin.site.register(User,Customeuser)
+    
+    # Naya user create karte waqt agar fields chahiye hon
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Karobar / Additional Info', {'fields': ('bio', 'age')}),
+    )
+
+# Model aur custom admin class ko register karein
+admin.site.register(User, Customeuser)
