@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJOS | Signup</title>
+</head>
+<body>
+
+    <h2>Be the part of our family to get signup</h2>
+
+    <!-- Non-field errors (jaise overall form ki ghaltiyan) yahan dikhengi -->
+    {% if form.non_field_errors %}
+        <div style="color: red;">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Username -->
+        <div>
+            <label>{{ form.username.label }}</label>
+            {{ form.username }}
+            {{ form.username.errors }}
+        </div>
+        <br>
+
+        <!-- Email -->
+        <div>
+            <label>{{ form.email.label }}</label>
+            {{ form.email }}
+            {{ form.email.errors }}
+        </div>
+        <br>
+
+        <!-- Age -->
+        <div>
+            <label>{{ form.age.label }}</label>
+            {{ form.age }}
+            {{ form.age.errors }}
+        </div>
+        <br>
+
+        <!-- Education -->
+        <div>
+            <label>{{ form.remember.label }}</label>
+            {{ form.remember }}
+            {{ form.remember.errors }}
+        </div>
+        <br>
+
+        <!-- Bio -->
+        <div>
+            <label>{{ form.bio.label }}</label>
+            {{ form.bio }}
+            {{ form.bio.errors }}
+        </div>
+        <br>
+
+        <!-- Password 1 -->
+        <div>
+            <label>{{ form.password1.label }}</label>
+            {{ form.password1 }}
+            {{ form.password1.errors }}
+        </div>
+        <br>
+
+        <!-- Password 2 (Confirmation) -->
+        <div>
+            <label>{{ form.password2.label }}</label>
+            {{ form.password2 }}
+            {{ form.password2.errors }}
+        </div>
+        <br>
+
+        <button type="submit">Signup</button>
+    </form>
+
+</body>
+</html>

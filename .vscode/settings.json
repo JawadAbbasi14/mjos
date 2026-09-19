@@ -31,6 +31,10 @@
     "python.analysis.indexing": false,
     "python.terminal.activateEnvironment": false,
     "python.testing.autoTestDiscoverOnSaveEnabled": false,
+    "emmet.triggerExpansionOnTab": true,
+    "emmet.includeLanguages": {
+        "django-html": "html"
+    },
     "python.analysis.exclude": [
         "**/.venv/**",
         "**/venv/**",

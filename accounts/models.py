@@ -4,3 +4,4 @@ from django.db import  models
 class User(AbstractUser):
    age = models.IntegerField(blank=False,null=True)
    bio = models.CharField(max_length=100,null=True)
+   remember = models.BooleanField(default=False)
