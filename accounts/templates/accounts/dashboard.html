@@ -1,11 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MJOS | Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MJOS | Dashboard</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: #f4f5f7;
+        color: #222;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.6s ease-in;
+    }
+
+    h2 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #2b2d42;
+        margin-bottom: 24px;
+    }
+
+    .logout-btn form {
+        margin: 0;
+    }
+
+    .logout-btn button {
+        padding: 10px 22px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        background-color: #444;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .logout-btn button:hover {
+        background-color: #222;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
 </head>
 <body>
-    <h2>Wellcome to MJOS </h2>
+<h2>Welcome to MJOS</h2>
+<div class="logout-btn">
+<form method="post" action="{% url "logout_name" %}">
+{% csrf_token %}
+<button type="submit">Logout</button>
+</form>
+</div>
 </body>
 </html>

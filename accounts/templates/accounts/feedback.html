@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: #f4f5f7;
+        color: #222;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.6s ease-in;
+    }
+
+    h2 {
+        font-size: 26px;
+        font-weight: 600;
+        color: #2b2d42;
+        margin-bottom: 24px;
+    }
+
+    .feeback_form form {
+        background-color: #fff;
+        padding: 24px 28px;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 280px;
+    }
+
+    .feeback_form label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #444;
+    }
+
+    .feeback_form input,
+    .feeback_form textarea {
+        padding: 8px 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        transition: border-color 0.2s ease;
+    }
+
+    .feeback_form input:focus,
+    .feeback_form textarea:focus {
+        border-color: #444;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+</head>
+<body>
+<h2>Thanks For Your Opinion</h2>
+<div class="feeback_form">
+<form action="" method="post">
+<label>{{ feeback_form.username.label }}</label>
+{{ feeback_form.username }}
+{{ feeback_form.message }}
+</form>
+</div>
+</body>
+</html>

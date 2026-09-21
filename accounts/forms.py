@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User
+from .models import User,Feedback
 
 class Signupform(UserCreationForm):
     class Meta:
@@ -13,4 +13,12 @@ class Signupform(UserCreationForm):
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'example@mail.com'}),
             'age': forms.NumberInput(attrs={'class': 'form-control', 'min': '18'}), # Minimum age 18
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-        }
+                    }
+
+# USer feed back form
+class Feedback_form(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['username', 'user_feedback'] 
+
+       

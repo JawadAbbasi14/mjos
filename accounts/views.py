@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, authenticate
-from .forms import Signupform
+from django.contrib.auth import login, authenticate,logout
+from .forms import Signupform,Feedback_form
 
 # Signup function logic
 def signup_views(request):
@@ -52,3 +52,34 @@ def login_views(request):
 
 def dashboard(request):
     return render(request,"accounts/dashboard.html")
+
+# Logout logic 
+
+def logout_views(request):
+    if request.method == "POST":
+        print("Done 1 post requst sucess")
+        logout(request)
+        print("LOgout ho gya")
+        return redirect("login")
+
+    logout(request)
+    return redirect("login")
+
+
+    # for Feedback
+def feedback_views(request):
+    if request.method == "POST":
+        feedback = Feedback_form(request.POST)
+
+        if feedback.is_valid():
+           feedback.save()
+           return render(request,"accounts/dashboard.html",{"feedback_form":feedback})
+
+        return render(request,"accounts/feedback.html", {"feedback_form":feedback})
+
+    else:
+      
+        feedback = Feedback_form()
+        return render(request, "accounts/feedback.html", {"feedback_form": feedback})
+
+    
