@@ -3,66 +3,141 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MJOS | Dashboard</title>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+<title>MJOS_SYSTEM | Feedback</title>
 
+<!-- Bootstrap 5 CDN Link (Fixed & Corrected) -->
+<link href="https://jsdelivr.net" rel="stylesheet">
+
+<style>
+    /* Pure Terminal Core Styling */
     body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        background-color: #f4f5f7;
-        color: #222;
+        background-color: #050806; /* Pitch dark hacker background */
+        color: #33ff33; /* Classic terminal matrix green */
+        font-family: 'Courier New', Courier, monospace; /* Hardcore monospace look */
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        animation: fadeIn 0.6s ease-in;
+        padding: 40px 16px;
+        animation: scanline 0.5s ease-in;
     }
 
-    h2 {
-        font-size: 28px;
-        font-weight: 600;
-        color: #2b2d42;
-        margin-bottom: 24px;
-    }
-
-    .logout-btn form {
-        margin: 0;
-    }
-
-    .logout-btn button {
-        padding: 10px 22px;
-        font-size: 15px;
-        font-weight: 500;
-        color: #fff;
-        background-color: #444;
-        border: none;
+    /* Terminal Console Box layout */
+    .terminal-card {
+        background-color: #0c100d;
+        border: 2px solid #22aa22; /* Dim green border for base layout */
         border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+        padding: 24px 30px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 0 20px rgba(51, 255, 51, 0.15); /* Matrix neon glow */
     }
 
-    .logout-btn button:hover {
-        background-color: #222;
+    /* Modifying Django input fields to look like real bash inputs */
+    .terminal-card input,
+    .terminal-card textarea,
+    .terminal-card select {
+        background-color: #050806 !important;
+        color: #33ff33 !important;
+        border: 1px solid #22aa22 !important;
+        font-family: inherit;
+        border-radius: 4px;
+        transition: all 0.25s ease-in-out;
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
+    /* Glow effect jab user typing box par click kare */
+    .terminal-card input:focus,
+    .terminal-card textarea:focus,
+    .terminal-card select:focus {
+        border-color: #33ff33 !important;
+        box-shadow: 0 0 10px rgba(51, 255, 51, 0.6) !important;
+        outline: none;
+    }
+
+    /* Placeholder text inside fields before typing */
+    ::placeholder {
+        color: #1a591a !important;
+        opacity: 0.7;
+    }
+
+    /* Custom Terminal Action Button (Green Hover Glow) */
+    .btn-terminal {
+        background-color: #114411;
+        color: #33ff33;
+        border: 1px solid #33ff33;
+        font-weight: bold;
+        transition: all 0.2s ease;
+    }
+
+    .btn-terminal:hover {
+        background-color: #33ff33;
+        color: #050806;
+        box-shadow: 0 0 15px #33ff33;
+    }
+
+    /* System Errors (Red Color) */
+    .errorlist, .text-danger {
+        color: #ff3333 !important;
+        font-size: 13px;
+        margin-top: 5px;
+        list-style: none;
+        padding-left: 0;
+    }
+
+    /* CRT monitor vibe animation */
+    @keyframes scanline {
+        from { opacity: 0.4; }
         to { opacity: 1; }
     }
 </style>
 </head>
-<body>
-<h2>Welcome to MJOS</h2>
-<div class="logout-btn">
-<form method="post" action="{% url "logout_name" %}">
-{% csrf_token %}
-<button type="submit">Logout</button>
-</form>
+<body class="font-monospace">
+
+<!-- Top Status Prompt Header -->
+<div class="mb-3 text-center">
+    <span class="text-secondary">[root@mjos_server]:~#</span> 
+    <span class="text-white">load_feedback_module()</span>
 </div>
+
+<div class="terminal-card">
+    <h2 class="h5 text-center mb-4 fw-bold" style="color: #33ff33; letter-spacing: 1px;">
+        == MJOS SYSTEM FEEDBACK LOG ==
+    </h2>
+    
+    <form action="" method="POST" autocomplete="off" class="d-flex flex-column gap-3">
+        {% csrf_token %}
+        
+        <!-- 1. Username Field -->
+        <div>
+            <label class="form-label mb-1 text-secondary small">&gt; {{ feedback_form.username.label }}</label>
+            {{ feedback_form.username }}
+        </div>
+        
+        <!-- 2. Feedback Message Field -->
+        <div>
+            <label class="form-label mb-1 text-secondary small">&gt; {{ feedback_form.user_feedback.label }}</label>
+            {{ feedback_form.user_feedback }}                      
+            
+            <!-- Errors Tracking via Bootstrap text-danger -->
+            {% if feedback_form.user_feedback.errors %}
+                <div class="text-danger small mt-1">
+                    <strong>[ERROR]:</strong> {{ feedback_form.user_feedback.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit / Execute Button -->
+        <div class="d-grid mt-2">
+            <button type="submit" class="btn btn-terminal py-2">SEND LOG DATA</button>
+        </div>
+    </form>
+</div>
+
+<!-- Footer terminal status badge -->
+<div class="mt-4 small text-secondary">
+    <span>CONNS STATUS: </span><span class="text-success">● SECURE BASH</span>
+</div>
+
 </body>
 </html>

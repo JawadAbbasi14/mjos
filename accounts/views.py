@@ -73,8 +73,8 @@ def feedback_views(request):
 
         if feedback.is_valid():
            feedback.save()
-           return render(request,"accounts/dashboard.html",{"feedback_form":feedback})
-
+           print("Feedback is save in databaase")
+           return redirect("dashboard")
         return render(request,"accounts/feedback.html", {"feedback_form":feedback})
 
     else:

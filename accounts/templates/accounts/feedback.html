@@ -1,81 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document</title>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+    
+    <!-- Bootstrap CDN Link (Yeh Bootstrap ko online load karega) -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
 
-    body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        background-color: #f4f5f7;
-        color: #222;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        animation: fadeIn 0.6s ease-in;
-    }
-
-    h2 {
-        font-size: 26px;
-        font-weight: 600;
-        color: #2b2d42;
-        margin-bottom: 24px;
-    }
-
-    .feeback_form form {
-        background-color: #fff;
-        padding: 24px 28px;
-        border-radius: 8px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        min-width: 280px;
-    }
-
-    .feeback_form label {
-        font-size: 14px;
-        font-weight: 500;
-        color: #444;
-    }
-
-    .feeback_form input,
-    .feeback_form textarea {
-        padding: 8px 10px;
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        outline: none;
-        transition: border-color 0.2s ease;
-    }
-
-    .feeback_form input:focus,
-    .feeback_form textarea:focus {
-        border-color: #444;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-</style>
+    <style>
+        body {
+            background-color: #f4f5f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .feedback-card {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        /* Aapka pasandeda custom button color */
+        .btn-custom-red {
+            background-color: #a30f0f;
+            color: white;
+            font-weight: 600;
+        }
+        .btn-custom-red:hover {
+            background-color: #820c0c;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-<h2>Thanks For Your Opinion</h2>
-<div class="feeback_form">
-<form action="" method="post">
-<label>{{ feeback_form.username.label }}</label>
-{{ feeback_form.username }}
-{{ feeback_form.message }}
-</form>
+
+<div class="container d-flex justify-content-center">
+    <div class="feedback-card">
+        <h2 class="text-center mb-4" style="color: #2b2d42; font-weight: 600;">Thanks For Your Opinion</h2>
+        
+        <form action="" method="POST">
+            {% csrf_token %}
+            
+            <!-- 1. Username Field -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-secondary">{{ feedback_form.username.label }}</label>
+                {{ feedback_form.username }}
+            </div>
+            
+            <!-- 2. Feedback Message Field -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-secondary">{{ feedback_form.user_feedback.label }}</label>
+                {{ feedback_form.user_feedback }}                      
+                
+                <!-- Errors Styling via Bootstrap -->
+                {% if feedback_form.user_feedback.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ feedback_form.user_feedback.errors }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Submit Button with Custom Red Hover Effect -->
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-custom-red py-2">Submit Feedback</button>
+            </div>
+        </form>
+    </div>
 </div>
+
 </body>
 </html>
