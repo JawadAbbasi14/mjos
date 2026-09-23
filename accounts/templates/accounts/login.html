@@ -4,137 +4,326 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MJOS_SYSTEM | Authentication</title>
-
-<!-- Bootstrap 5 CDN Link -->
-<link href="https://jsdelivr.net" rel="stylesheet">
+<!-- Modern Font for Light Mode -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-    /* Pure Terminal Core Styling */
+    /* =========================================
+       DARK MODE (TERMINAL / HACKER STYLE)
+       ========================================= */
+    :root {
+        --bg: #050806;
+        --card-bg: #0c100d;
+        --border: #22aa22;
+        --border-active: #33ff33;
+        --text: #33ff33;
+        --text-dim: #1a591a;
+        --font: 'Courier New', Courier, monospace;
+        --btn-bg: #114411;
+        --error: #ff3333;
+        --glow: rgba(51, 255, 51, 0.15);
+        --glow-strong: rgba(51, 255, 51, 0.6);
+    }
+
+    /* =========================================
+       LIGHT MODE (PREMIUM MODERN GUI)
+       ========================================= */
+    [data-theme="light"] {
+        --bg: #f8fafc; /* Soft slate background */
+        --card-bg: #ffffff; /* Pure white card */
+        --border: #e2e8f0; /* Very subtle border */
+        --border-active: #4f46e5; /* Premium Indigo */
+        --text: #0f172a; /* Deep slate text */
+        --text-dim: #64748b; /* Muted slate */
+        --font: 'Inter', sans-serif; /* Modern clean font */
+        --btn-bg: #4f46e5; /* Indigo button */
+        --error: #ef4444; /* Modern soft red */
+        --glow: rgba(0, 0, 0, 0.05); /* Soft shadow base */
+        --glow-strong: rgba(79, 70, 229, 0.2); /* Indigo focus ring */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-        background-color: #050806; /* Pitch dark hacker background */
-        color: #33ff33; /* Classic terminal matrix green */
-        font-family: 'Courier New', Courier, monospace; /* Monospace look */
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 40px 16px;
-        animation: scanline 0.5s ease-in;
+        transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    /* Terminal Console Box layout */
     .terminal-card {
-        background-color: #0c100d;
-        border: 2px solid #22aa22; /* Dim green border */
+        background-color: var(--card-bg);
+        border: 2px solid var(--border);
         border-radius: 6px;
         padding: 24px 30px;
         width: 100%;
         max-width: 400px;
-        box-shadow: 0 0 20px rgba(51, 255, 51, 0.15); /* Matrix neon glow */
+        box-shadow: 0 0 20px var(--glow);
+        transition: all 0.4s ease;
     }
 
-    /* Modifying Django input fields to look like real bash inputs */
+    /* Light Mode Card: Soft shadow, rounded corners, no heavy border */
+    [data-theme="light"] .terminal-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        padding: 32px;
+    }
+
     .terminal-card input {
-        background-color: #050806 !important;
-        color: #33ff33 !important;
-        border: 1px solid #22aa22 !important;
+        background-color: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border);
         font-family: inherit;
         border-radius: 4px;
-        transition: all 0.25s ease-in-out;
+        width: 100%;
+        padding: 10px 12px;
+        transition: all 0.3s ease-in-out;
+        font-size: 14px;
     }
 
-    /* Glow effect jab user typing box par click kare */
+    /* Light Mode Inputs: Soft background, rounded, focus ring */
+    [data-theme="light"] .terminal-card input {
+        background-color: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 12px 14px;
+    }
+
     .terminal-card input:focus {
-        border-color: #33ff33 !important;
-        box-shadow: 0 0 10px rgba(51, 255, 51, 0.6) !important;
+        border-color: var(--border-active);
+        box-shadow: 0 0 10px var(--glow-strong);
         outline: none;
     }
 
-    /* Custom Terminal Action Button */
+    [data-theme="light"] .terminal-card input:focus {
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px var(--glow-strong);
+    }
+
     .btn-terminal {
-        background-color: #114411;
-        color: #33ff33;
-        border: 1px solid #33ff33;
+        background-color: var(--btn-bg);
+        color: var(--text);
+        border: 1px solid var(--border-active);
         font-weight: bold;
-        transition: all 0.2s ease;
+        padding: 10px;
+        border-radius: 4px;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        font-size: 14px;
+        margin-top: 8px;
     }
 
     .btn-terminal:hover {
-        background-color: #33ff33;
-        color: #050806;
-        box-shadow: 0 0 15px #33ff33;
+        background-color: var(--border-active);
+        color: var(--bg);
+        box-shadow: 0 0 15px var(--border-active);
     }
 
-    /* System Errors (Red Color) */
+    /* Light Mode Button: Solid color, subtle lift on hover */
+    [data-theme="light"] .btn-terminal {
+        border: none;
+        border-radius: 8px;
+        color: #ffffff;
+        padding: 12px;
+        font-weight: 600;
+        box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+    }
+
+    [data-theme="light"] .btn-terminal:hover {
+        background-color: #4338ca; /* Darker indigo */
+        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        transform: translateY(-1px);
+    }
+
     .errorlist, .text-danger {
-        color: #ff3333 !important;
-        font-size: 13px;
-        margin-top: 5px;
+        color: var(--error);
+        font-size: 12px;
+        margin-top: 6px;
         list-style: none;
         padding-left: 0;
+        font-weight: 500;
     }
 
-    /* CRT monitor vibe animation */
-    @keyframes scanline {
-        from { opacity: 0.4; }
-        to { opacity: 1; }
+    .alert-danger {
+        background-color: rgba(255, 51, 51, 0.1);
+        border: 1px solid var(--error);
+        color: var(--error);
+        font-size: 13px;
+        padding: 10px 12px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    /* Light Mode Alert: Soft red background, no harsh border */
+    [data-theme="light"] .alert-danger {
+        background-color: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        border-radius: 8px;
+    }
+
+    .field-group { margin-bottom: 18px; }
+
+    .label-line {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--text-dim);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .card-title {
+        text-align: center;
+        margin-bottom: 24px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        color: var(--text);
+        transition: all 0.4s ease;
+    }
+
+    [data-theme="light"] .card-title {
+        font-size: 24px;
+        letter-spacing: -0.5px;
+        margin-bottom: 28px;
+    }
+
+    .header-prompt {
+        margin-bottom: 16px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--text-dim);
+        transition: all 0.4s ease;
+    }
+
+    .status-footer {
+        margin-top: 24px;
+        font-size: 12px;
+        color: var(--text-dim);
+        text-align: center;
+    }
+
+    .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 12px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+    .theme-toggle:hover {
+        border-color: var(--border-active);
+    }
+
+    [data-theme="light"] .theme-toggle {
+        background: #ffffff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border-radius: 50px;
     }
 </style>
 </head>
-<body class="font-monospace">
+<body data-theme="terminal">
 
-<!-- Top Status Prompt Header -->
-<div class="mb-3 text-center">
-    <span class="text-secondary">[root@mjos_server]:~#</span> 
-    <span class="text-white">request_auth_token()</span>
+<button class="theme-toggle" onclick="toggleTheme()">⇄ Toggle View</button>
+
+<div class="header-prompt" id="header-prompt">
+    <span>[root@mjos_server]:~#</span> request_auth_token()
 </div>
 
 <div class="terminal-card">
-    <h2 class="h5 text-center mb-4 fw-bold" style="color: #33ff33; letter-spacing: 1px;">
-        == MJOS SYSTEM SECURE LOGIN ==
-    </h2>
+    <h2 class="card-title" id="card-title">== MJOS SYSTEM SECURE LOGIN ==</h2>
 
-    <!-- Overall form errors if authentication fails -->
     {% if form.non_field_errors %}
-    <div class="alert alert-danger bg-black border border-danger text-danger small py-2 mb-3">
+    <div class="alert-danger">
         <strong>[ACCESS DENIED]:</strong> {{ form.non_field_errors }}
     </div>
     {% endif %}
-    
-    <form action="" method="POST" autocomplete="off" class="d-flex flex-column gap-3">
+
+    <form action="" method="POST" autocomplete="off">
         {% csrf_token %}
-        
-        <!-- Django dynamically targets AuthenticationForm fields -->
+
         {% if form.username %}
-            <!-- Manual render agar fields pass ho rahi hain -->
-            <div>
-                <label class="form-label mb-1 text-secondary small">&gt; {{ form.username.label }}</label>
+            <div class="field-group">
+                <label class="label-line">&gt; {{ form.username.label }}</label>
                 {{ form.username }}
                 <div class="errorlist">{{ form.username.errors }}</div>
             </div>
-            
-            <div>
-                <label class="form-label mb-1 text-secondary small">&gt; {{ form.password.label }}</label>
+
+            <div class="field-group">
+                <label class="label-line">&gt; {{ form.password.label }}</label>
                 {{ form.password }}
                 <div class="errorlist">{{ form.password.errors }}</div>
             </div>
         {% else %}
-            <!-- Safety Fallback agar generic variable handle karna ho -->
             {{ form.as_p }}
         {% endif %}
 
-        <!-- Submit / Authentication Button -->
-        <div class="d-grid mt-2">
-            <button type="submit" class="btn btn-terminal py-2">DECRYPT & LOGIN</button>
-        </div>
+        <button type="submit" class="btn-terminal" id="submit-btn">DECRYPT & LOGIN</button>
     </form>
 </div>
 
-<!-- Footer terminal status badge -->
-<div class="mt-4 small text-secondary">
-    <span>SESSION STATUS: </span><span class="text-warning">● AWAITING AUTH</span>
+<div class="status-footer" id="status-footer">
+    SESSION STATUS: <span style="color: var(--border-active); font-weight: bold;">● AWAITING AUTH</span>
 </div>
+
+<script>
+    function applyThemeLabels(theme) {
+        const isLight = theme === "light";
+        
+        // Header Text
+        document.getElementById("header-prompt").innerHTML = isLight
+            ? "Welcome back to MJOS"
+            : "<span>[root@mjos_server]:~#</span> request_auth_token()";
+            
+        // Card Title
+        document.getElementById("card-title").textContent = isLight
+            ? "Sign In to Your Account"
+            : "== MJOS SYSTEM SECURE LOGIN ==";
+            
+        // Button Text
+        document.getElementById("submit-btn").textContent = isLight
+            ? "Sign In"
+            : "DECRYPT & LOGIN";
+
+        // Footer Text
+        document.getElementById("status-footer").innerHTML = isLight
+            ? "Secure connection established."
+            : "SESSION STATUS: <span style='color: var(--border-active); font-weight: bold;'>● AWAITING AUTH</span>";
+    }
+
+    function toggleTheme() {
+        const current = document.body.getAttribute("data-theme");
+        const next = current === "terminal" ? "light" : "terminal";
+        document.body.setAttribute("data-theme", next);
+        applyThemeLabels(next);
+        localStorage.setItem("mjos_theme", next);
+    }
+
+    (function () {
+        const saved = localStorage.getItem("mjos_theme") || "terminal";
+        document.body.setAttribute("data-theme", saved);
+        applyThemeLabels(saved);
+    })();
+</script>
 
 </body>
 </html>

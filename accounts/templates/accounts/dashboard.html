@@ -3,141 +3,314 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MJOS_SYSTEM | Feedback</title>
-
-<!-- Bootstrap 5 CDN Link (Fixed & Corrected) -->
-<link href="https://jsdelivr.net" rel="stylesheet">
+<title>MJOS_SYSTEM | Dashboard</title>
 
 <style>
-    /* Pure Terminal Core Styling */
+    /* =========================================
+       DARK MODE (TERMINAL / HACKER STYLE)
+       ========================================= */
+    :root {
+        --bg: #050806;
+        --card-bg: #0c100d;
+        --border: #22aa22;
+        --border-active: #33ff33;
+        --text: #33ff33;
+        --text-dim: #1a591a;
+        --font: 'Courier New', Courier, monospace;
+        --btn-bg: #114411;
+        --btn-text: #33ff33;
+        --error: #ff3333;
+        --glow: rgba(51, 255, 51, 0.15);
+        --glow-strong: rgba(51, 255, 51, 0.6);
+        --card-shadow: 0 0 20px var(--glow);
+        --input-bg: #050806;
+        --btn-hover-bg: #33ff33;
+        --btn-hover-text: #050806;
+    }
+
+    /* =========================================
+       LIGHT MODE (MODERN / USER-FRIENDLY)
+       ========================================= */
+    [data-theme="light"] {
+        --bg: #f8f9fa; /* Soft light gray background */
+        --card-bg: #ffffff; /* Pure white card */
+        --border: #e9ecef; /* Very subtle border */
+        --border-active: #0d6efd; /* Modern blue focus */
+        --text: #212529; /* Dark gray text for readability */
+        --text-dim: #6c757d; /* Muted text */
+        --font: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* Clean modern font */
+        --btn-bg: #0d6efd; /* Bootstrap primary blue */
+        --btn-text: #ffffff;
+        --error: #dc3545; /* Modern red */
+        --glow: rgba(0, 0, 0, 0.05);
+        --glow-strong: rgba(13, 110, 253, 0.25);
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Soft drop shadow */
+        --input-bg: #ffffff;
+        --btn-hover-bg: #0b5ed7;
+        --btn-hover-text: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-        background-color: #050806; /* Pitch dark hacker background */
-        color: #33ff33; /* Classic terminal matrix green */
-        font-family: 'Courier New', Courier, monospace; /* Hardcore monospace look */
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
         min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 40px 16px;
-        animation: scanline 0.5s ease-in;
+        transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    /* Terminal Console Box layout */
     .terminal-card {
-        background-color: #0c100d;
-        border: 2px solid #22aa22; /* Dim green border for base layout */
+        background-color: var(--card-bg);
+        border: 2px solid var(--border);
         border-radius: 6px;
         padding: 24px 30px;
         width: 100%;
-        max-width: 480px;
-        box-shadow: 0 0 20px rgba(51, 255, 51, 0.15); /* Matrix neon glow */
+        max-width: 500px;
+        box-shadow: var(--card-shadow);
+        transition: all 0.4s ease;
     }
 
-    /* Modifying Django input fields to look like real bash inputs */
-    .terminal-card input,
-    .terminal-card textarea,
-    .terminal-card select {
-        background-color: #050806 !important;
-        color: #33ff33 !important;
-        border: 1px solid #22aa22 !important;
-        font-family: inherit;
-        border-radius: 4px;
-        transition: all 0.25s ease-in-out;
+    /* Light mode mein border hata kar sirf shadow rakhein */
+    [data-theme="light"] .terminal-card {
+        border: 1px solid var(--border);
+        border-radius: 12px; /* Thora zyada rounded corners */
     }
 
-    /* Glow effect jab user typing box par click kare */
-    .terminal-card input:focus,
-    .terminal-card textarea:focus,
-    .terminal-card select:focus {
-        border-color: #33ff33 !important;
-        box-shadow: 0 0 10px rgba(51, 255, 51, 0.6) !important;
-        outline: none;
-    }
-
-    /* Placeholder text inside fields before typing */
-    ::placeholder {
-        color: #1a591a !important;
-        opacity: 0.7;
-    }
-
-    /* Custom Terminal Action Button (Green Hover Glow) */
-    .btn-terminal {
-        background-color: #114411;
-        color: #33ff33;
-        border: 1px solid #33ff33;
+    .card-title {
+        text-align: center;
+        margin-bottom: 20px;
         font-weight: bold;
-        transition: all 0.2s ease;
+        letter-spacing: 1px;
+        color: var(--text);
+        transition: all 0.4s ease;
+    }
+
+    /* Light mode mein title ko normal aur clean banayen */
+    [data-theme="light"] .card-title {
+        font-size: 24px;
+        letter-spacing: normal;
+        margin-bottom: 10px;
+    }
+
+    .header-prompt {
+        margin-bottom: 12px;
+        text-align: center;
+        font-size: 14px;
+        color: var(--text-dim);
+        transition: all 0.4s ease;
+    }
+
+    .status-badge {
+        text-align: center;
+        margin-bottom: 24px;
+        padding: 10px;
+        background-color: var(--input-bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: 14px;
+        transition: all 0.4s ease;
+    }
+
+    [data-theme="light"] .status-badge {
+        background-color: #e7f1ff; /* Light blue background for status */
+        color: #084298;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .btn-terminal {
+        background-color: var(--btn-bg);
+        color: var(--btn-text);
+        border: 1px solid var(--border-active);
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 4px;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: var(--font);
+        font-size: 14px;
     }
 
     .btn-terminal:hover {
-        background-color: #33ff33;
-        color: #050806;
-        box-shadow: 0 0 15px #33ff33;
+        background-color: var(--btn-hover-bg);
+        color: var(--btn-hover-text);
+        box-shadow: 0 0 15px var(--border-active);
     }
 
-    /* System Errors (Red Color) */
-    .errorlist, .text-danger {
-        color: #ff3333 !important;
-        font-size: 13px;
-        margin-top: 5px;
-        list-style: none;
-        padding-left: 0;
+    /* Light mode buttons: Modern, solid, rounded */
+    [data-theme="light"] .btn-terminal {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        font-size: 15px;
     }
 
-    /* CRT monitor vibe animation */
-    @keyframes scanline {
-        from { opacity: 0.4; }
-        to { opacity: 1; }
+    [data-theme="light"] .btn-terminal:hover {
+        box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .btn-logout {
+        background-color: transparent;
+        border: 1px solid var(--error);
+        color: var(--error);
+    }
+
+    .btn-logout:hover {
+        background-color: var(--error);
+        color: var(--bg);
+        box-shadow: 0 0 15px var(--error);
+    }
+
+    [data-theme="light"] .btn-logout {
+        background-color: #fff;
+        color: var(--error);
+        border: 1px solid var(--error);
+    }
+
+    [data-theme="light"] .btn-logout:hover {
+        background-color: var(--error);
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+    }
+
+    .status-footer {
+        margin-top: 24px;
+        font-size: 12px;
+        color: var(--text-dim);
+        text-align: center;
+    }
+
+    .theme-toggle {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px var(--glow);
+    }
+
+    .theme-toggle:hover {
+        border-color: var(--border-active);
+    }
+
+    [data-theme="light"] .theme-toggle {
+        border-radius: 50px;
+        padding: 8px 16px;
+        font-family: var(--font);
     }
 </style>
 </head>
-<body class="font-monospace">
+<body data-theme="terminal">
 
-<!-- Top Status Prompt Header -->
-<div class="mb-3 text-center">
-    <span class="text-secondary">[root@mjos_server]:~#</span> 
-    <span class="text-white">load_feedback_module()</span>
+<button class="theme-toggle" onclick="toggleTheme()">⇄ TOGGLE VIEW</button>
+
+<div class="header-prompt" id="header-prompt">
+    <span>[root@mjos_server]:~#</span> access_granted()
 </div>
 
 <div class="terminal-card">
-    <h2 class="h5 text-center mb-4 fw-bold" style="color: #33ff33; letter-spacing: 1px;">
-        == MJOS SYSTEM FEEDBACK LOG ==
-    </h2>
-    
-    <form action="" method="POST" autocomplete="off" class="d-flex flex-column gap-3">
-        {% csrf_token %}
-        
-        <!-- 1. Username Field -->
-        <div>
-            <label class="form-label mb-1 text-secondary small">&gt; {{ feedback_form.username.label }}</label>
-            {{ feedback_form.username }}
-        </div>
-        
-        <!-- 2. Feedback Message Field -->
-        <div>
-            <label class="form-label mb-1 text-secondary small">&gt; {{ feedback_form.user_feedback.label }}</label>
-            {{ feedback_form.user_feedback }}                      
-            
-            <!-- Errors Tracking via Bootstrap text-danger -->
-            {% if feedback_form.user_feedback.errors %}
-                <div class="text-danger small mt-1">
-                    <strong>[ERROR]:</strong> {{ feedback_form.user_feedback.errors }}
-                </div>
-            {% endif %}
-        </div>
+    <h2 class="card-title" id="card-title">== MJOS SYSTEM DASHBOARD ==</h2>
 
-        <!-- Submit / Execute Button -->
-        <div class="d-grid mt-2">
-            <button type="submit" class="btn btn-terminal py-2">SEND LOG DATA</button>
-        </div>
+    <div class="status-badge">
+        STATUS: <span style="color: var(--border-active); font-weight: bold;">● AUTHENTICATED</span><br>
+        <span id="welcome-text" style="font-size: 12px; color: var(--text-dim); margin-top: 5px; display: block;">Welcome back, User. All systems operational.</span>
+    </div>
+
+    <div class="action-grid">
+        <!-- Feedback Link -->
+        <a href="{% url 'feedback' %}" class="btn-terminal">
+            SEND FEEDBACK
+        </a>
+        
+        <!-- Profile Placeholder -->
+        <a href="{% url 'dashboard' %}" class="btn-terminal">
+            USER PROFILE
+        </a>
+    </div>
+
+    <!-- Secure Logout Form -->
+    <form action="{% url 'logout_name' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn-terminal btn-logout">
+            TERMINATE SESSION (LOGOUT)
+        </button>
     </form>
 </div>
 
-<!-- Footer terminal status badge -->
-<div class="mt-4 small text-secondary">
-    <span>CONNS STATUS: </span><span class="text-success">● SECURE BASH</span>
+<div class="status-footer" id="status-footer">
+    SYSTEM UPTIME: <span style="color: var(--border-active);">99.9%</span> | SECURE CONNECTION
 </div>
+
+<script>
+    function applyThemeLabels(theme) {
+        const isLight = theme === "light";
+        
+        // Header Prompt Change
+        document.getElementById("header-prompt").innerHTML = isLight
+            ? "Welcome to your Dashboard"
+            : "<span>[root@mjos_server]:~#</span> access_granted()";
+            
+        // Card Title Change
+        document.getElementById("card-title").textContent = isLight
+            ? "Dashboard Overview"
+            : "== MJOS SYSTEM DASHBOARD ==";
+            
+        // Welcome Text Change
+        document.getElementById("welcome-text").textContent = isLight
+            ? "Glad to see you again! Here is what's happening with your projects today."
+            : "Welcome back, User. All systems operational.";
+
+        // Logout Button Text Change
+        const logoutBtn = document.querySelector('.btn-logout');
+        if(logoutBtn) {
+            logoutBtn.innerHTML = isLight ? "Log Out" : "[!] TERMINATE SESSION (LOGOUT)";
+        }
+
+        // Footer Text Change
+        document.getElementById("status-footer").innerHTML = isLight
+            ? "All systems running smoothly."
+            : "SYSTEM UPTIME: <span style='color: var(--border-active);'>99.9%</span> | SECURE CONNECTION";
+    }
+
+    function toggleTheme() {
+        const current = document.body.getAttribute("data-theme");
+        const next = current === "terminal" ? "light" : "terminal";
+        document.body.setAttribute("data-theme", next);
+        applyThemeLabels(next);
+        localStorage.setItem("mjos_theme", next);
+    }
+
+    (function () {
+        const saved = localStorage.getItem("mjos_theme") || "terminal";
+        document.body.setAttribute("data-theme", saved);
+        applyThemeLabels(saved);
+    })();
+</script>
 
 </body>
 </html>

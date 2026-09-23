@@ -1,76 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Form</title>
-    
-    <!-- Bootstrap CDN Link (Yeh Bootstrap ko online load karega) -->
-    <link href="https://jsdelivr.net" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MJOS_SYSTEM | Feedback</title>
+<!-- Modern Font for Light Mode -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            background-color: #f4f5f7;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .feedback-card {
-            max-width: 500px;
-            width: 100%;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        /* Aapka pasandeda custom button color */
-        .btn-custom-red {
-            background-color: #a30f0f;
-            color: white;
-            font-weight: 600;
-        }
-        .btn-custom-red:hover {
-            background-color: #820c0c;
-            color: white;
-        }
-    </style>
+<style>
+    /* =========================================
+       DARK MODE (TERMINAL / HACKER STYLE)
+       ========================================= */
+    :root {
+        --bg: #050806;
+        --card-bg: #0c100d;
+        --border: #22aa22;
+        --border-active: #33ff33;
+        --text: #33ff33;
+        --text-dim: #1a591a;
+        --font: 'Courier New', Courier, monospace;
+        --btn-bg: #114411;
+        --btn-text: #33ff33;
+        --error: #ff3333;
+        --glow: rgba(51, 255, 51, 0.15);
+        --glow-strong: rgba(51, 255, 51, 0.6);
+    }
+
+    /* =========================================
+       LIGHT MODE (PREMIUM MODERN GUI)
+       ========================================= */
+    [data-theme="light"] {
+        --bg: #f8fafc;
+        --card-bg: #ffffff;
+        --border: #e2e8f0;
+        --border-active: #4f46e5; /* Premium Indigo */
+        --text: #0f172a;
+        --text-dim: #64748b;
+        --font: 'Inter', sans-serif;
+        --btn-bg: #4f46e5;
+        --btn-text: #ffffff;
+        --error: #ef4444;
+        --glow: rgba(0, 0, 0, 0.05);
+        --glow-strong: rgba(79, 70, 229, 0.2);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 16px;
+        transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    .feedback-card {
+        background-color: var(--card-bg);
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        padding: 24px 30px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 0 20px var(--glow);
+        transition: all 0.4s ease;
+    }
+
+    /* Light Mode Card: Soft shadow, rounded corners */
+    [data-theme="light"] .feedback-card {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        padding: 32px;
+    }
+
+    .feedback-card input,
+    .feedback-card textarea,
+    .feedback-card select {
+        background-color: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border);
+        font-family: inherit;
+        border-radius: 4px;
+        width: 100%;
+        padding: 10px 12px;
+        transition: all 0.3s ease-in-out;
+        font-size: 14px;
+    }
+
+    /* Light Mode Inputs: Soft background, rounded */
+    [data-theme="light"] .feedback-card input,
+    [data-theme="light"] .feedback-card textarea {
+        background-color: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 12px 14px;
+    }
+
+    .feedback-card input:focus,
+    .feedback-card textarea:focus,
+    .feedback-card select:focus {
+        border-color: var(--border-active);
+        box-shadow: 0 0 10px var(--glow-strong);
+        outline: none;
+    }
+
+    [data-theme="light"] .feedback-card input:focus,
+    [data-theme="light"] .feedback-card textarea:focus {
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px var(--glow-strong);
+    }
+
+    ::placeholder {
+        color: var(--text-dim);
+        opacity: 0.7;
+    }
+
+    .field-group { margin-bottom: 18px; }
+
+    .label-line {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: var(--text-dim);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-custom {
+        background-color: var(--btn-bg);
+        color: var(--btn-text);
+        border: 1px solid var(--border-active);
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 4px;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        font-size: 14px;
+        margin-top: 8px;
+    }
+
+    .btn-custom:hover {
+        background-color: var(--border-active);
+        color: var(--bg);
+        box-shadow: 0 0 15px var(--border-active);
+    }
+
+    /* Light Mode Button: Solid color, subtle lift */
+    [data-theme="light"] .btn-custom {
+        border: none;
+        border-radius: 8px;
+        color: #ffffff;
+        padding: 12px;
+        font-weight: 600;
+        box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+    }
+
+    [data-theme="light"] .btn-custom:hover {
+        background-color: #4338ca;
+        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        transform: translateY(-1px);
+    }
+
+    .errorlist, .text-danger {
+        color: var(--error);
+        font-size: 12px;
+        margin-top: 6px;
+        list-style: none;
+        padding-left: 0;
+        font-weight: 500;
+    }
+
+    .card-title {
+        text-align: center;
+        margin-bottom: 24px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        color: var(--text);
+        transition: all 0.4s ease;
+    }
+
+    [data-theme="light"] .card-title {
+        font-size: 24px;
+        letter-spacing: -0.5px;
+        margin-bottom: 28px;
+    }
+
+    .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 12px;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+    .theme-toggle:hover {
+        border-color: var(--border-active);
+    }
+
+    [data-theme="light"] .theme-toggle {
+        background: #ffffff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border-radius: 50px;
+    }
+</style>
 </head>
-<body>
+<body data-theme="terminal">
 
-<div class="container d-flex justify-content-center">
-    <div class="feedback-card">
-        <h2 class="text-center mb-4" style="color: #2b2d42; font-weight: 600;">Thanks For Your Opinion</h2>
-        
-        <form action="" method="POST">
-            {% csrf_token %}
-            
-            <!-- 1. Username Field -->
-            <div class="mb-3">
-                <label class="form-label fw-semibold text-secondary">{{ feedback_form.username.label }}</label>
-                {{ feedback_form.username }}
-            </div>
-            
-            <!-- 2. Feedback Message Field -->
-            <div class="mb-3">
-                <label class="form-label fw-semibold text-secondary">{{ feedback_form.user_feedback.label }}</label>
-                {{ feedback_form.user_feedback }}                      
-                
-                <!-- Errors Styling via Bootstrap -->
-                {% if feedback_form.user_feedback.errors %}
-                    <div class="text-danger small mt-1">
-                        {{ feedback_form.user_feedback.errors }}
-                    </div>
-                {% endif %}
-            </div>
+<button class="theme-toggle" onclick="toggleTheme()">⇄ Toggle View</button>
 
-            <!-- Submit Button with Custom Red Hover Effect -->
-            <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-custom-red py-2">Submit Feedback</button>
-            </div>
-        </form>
-    </div>
+<div class="feedback-card">
+    <h2 class="card-title" id="card-title">== TRANSMIT FEEDBACK ==</h2>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <div class="field-group">
+            <label class="label-line">&gt; {{ feedback_form.username.label }}</label>
+            {{ feedback_form.username }}
+        </div>
+
+        <div class="field-group">
+            <label class="label-line">&gt; {{ feedback_form.user_feedback.label }}</label>
+            {{ feedback_form.user_feedback }}
+            {% if feedback_form.user_feedback.errors %}
+                <div class="text-danger">{{ feedback_form.user_feedback.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn-custom" id="submit-btn">SEND DATA PACKET</button>
+    </form>
 </div>
+
+<script>
+    function applyThemeLabels(theme) {
+        const isLight = theme === "light";
+        
+        // Card Title
+        document.getElementById("card-title").textContent = isLight
+            ? "Share Your Feedback"
+            : "== TRANSMIT FEEDBACK ==";
+            
+        // Button Text
+        document.getElementById("submit-btn").textContent = isLight
+            ? "Submit Feedback"
+            : "SEND DATA PACKET";
+    }
+
+    function toggleTheme() {
+        const current = document.body.getAttribute("data-theme");
+        const next = current === "terminal" ? "light" : "terminal";
+        document.body.setAttribute("data-theme", next);
+        applyThemeLabels(next);
+        localStorage.setItem("mjos_theme", next);
+    }
+
+    (function () {
+        const saved = localStorage.getItem("mjos_theme") || "terminal";
+        document.body.setAttribute("data-theme", saved);
+        applyThemeLabels(saved);
+    })();
+</script>
 
 </body>
 </html>
