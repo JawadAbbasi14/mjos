@@ -1,85 +1,62 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, authenticate,logout
-from .forms import Signupform,Feedback_form
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from .forms import Signupform, Feedback_form
 
-# Signup function logic
 def signup_views(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+        
     if request.method == "POST":
-        print("Step one done POST")
         form = Signupform(request.POST)
-
-
         if form.is_valid():
-            print("step 2 done Validity")
             user = form.save()
             login(request, user)
-            print("Login sucessfully!")
             return redirect("dashboard")
-        print(f"Form error {form.errors}")  # 1. Isay block ke ANDAR hona chahiye
     else:
-        form = Signupform()  # GET request ke liye khali form
-
-    # 2. Render se pehle 'return' lagana lazmi hai
+        form = Signupform()
     return render(request, "accounts/signup.html", {"form": form})
 
 
-# Login function logic
 def login_views(request):
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+        
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
-
-        # 3. Validation check lagana zaroori hai, iske baghair cleaned_data nahi chalta
         if form.is_valid():
-            # 4. Spelled correctly and used '=' instead of '-'
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-
             user = authenticate(username=username, password=password)
-
             if user is not None:
                 login(request, user)
                 return redirect("dashboard")
     else:
-        form = AuthenticationForm()  # GET request ke liye khali form
-
-    # 5. Render se pehle 'return' lagaya aur login page ka template use kiya
+        form = AuthenticationForm()
     return render(request, "accounts/login.html", {"form": form})
 
 
-
-# Logic for dashboard
-
+@login_required(login_url='login')
 def dashboard(request):
-    return render(request,"accounts/dashboard.html")
+    return render(request, "accounts/dashboard.html")
 
-# Logout logic 
 
 def logout_views(request):
-    if request.method == "POST":
-        print("Done 1 post requst sucess")
-        logout(request)
-        print("LOgout ho gya")
-        return redirect("login")
-
     logout(request)
     return redirect("login")
 
 
-    # for Feedback
+@login_required(login_url='login')
 def feedback_views(request):
     if request.method == "POST":
         feedback = Feedback_form(request.POST)
-
         if feedback.is_valid():
-           feedback.save()
-           print("Feedback is save in databaase")
-           return redirect("dashboard")
-        return render(request,"accounts/feedback.html", {"feedback_form":feedback})
-
+            feedback_instance = feedback.save(commit=False)
+            if hasattr(feedback_instance, 'user') and not feedback_instance.user_id:
+                feedback_instance.user = request.user
+            feedback_instance.save()
+            return redirect("dashboard")
     else:
-      
         feedback = Feedback_form()
-        return render(request, "accounts/feedback.html", {"feedback_form": feedback})
-
-    
+    return render(request, "accounts/feedback.html", {"feedback_form": feedback})

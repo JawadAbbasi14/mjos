@@ -3,15 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MJOS_SYSTEM | Signup</title>
+<title>MJOS_SYSTEM | Registration</title>
 <!-- Modern Font for Light Mode -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
     /* =========================================
-       DARK MODE (TERMINAL / HACKER STYLE)
+       1. CSS VARIABLES (FOUNDATION)
        ========================================= */
     :root {
+        /* --- TERMINAL THEME (DARK) --- */
         --bg: #050806;
         --card-bg: #0c100d;
         --border: #22aa22;
@@ -26,10 +27,8 @@
         --glow-strong: rgba(51, 255, 51, 0.6);
     }
 
-    /* =========================================
-       LIGHT MODE (PREMIUM MODERN GUI)
-       ========================================= */
     [data-theme="light"] {
+        /* --- GUI THEME (LIGHT) --- */
         --bg: #f8fafc;
         --card-bg: #ffffff;
         --border: #e2e8f0;
@@ -59,6 +58,9 @@
         transition: background-color 0.4s ease, color 0.4s ease;
     }
 
+    /* =========================================
+       2. CARDS & CONTAINERS
+       ========================================= */
     .terminal-card {
         background-color: var(--card-bg);
         border: 2px solid var(--border);
@@ -70,14 +72,17 @@
         transition: all 0.4s ease;
     }
 
-    /* Light Mode Card: Soft shadow, rounded corners */
     [data-theme="light"] .terminal-card {
+        background-color: var(--card-bg);
         border: 1px solid var(--border);
         border-radius: 16px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 20px 25px -5px var(--glow), 0 10px 10px -5px var(--glow);
         padding: 32px;
     }
 
+    /* =========================================
+       3. INPUTS, TEXTAREAS & SELECTS
+       ========================================= */
     .terminal-card input,
     .terminal-card textarea,
     .terminal-card select {
@@ -92,18 +97,16 @@
         font-size: 14px;
     }
 
-    /* Specific styling for textarea (Bio field) */
     .terminal-card textarea {
         resize: vertical;
         min-height: 80px;
     }
 
-    /* Light Mode Inputs: Soft background, rounded */
     [data-theme="light"] .terminal-card input,
     [data-theme="light"] .terminal-card textarea,
     [data-theme="light"] .terminal-card select {
         background-color: #f1f5f9;
-        border: 1px solid #cbd5e1;
+        border: 1px solid var(--border);
         border-radius: 8px;
         padding: 12px 14px;
     }
@@ -119,7 +122,7 @@
     [data-theme="light"] .terminal-card input:focus,
     [data-theme="light"] .terminal-card textarea:focus,
     [data-theme="light"] .terminal-card select:focus {
-        background-color: #ffffff;
+        background-color: var(--card-bg);
         box-shadow: 0 0 0 3px var(--glow-strong);
     }
 
@@ -140,6 +143,14 @@
         letter-spacing: 0.5px;
     }
 
+    [data-theme="light"] .label-line {
+        color: var(--text-dim);
+        font-weight: 600;
+    }
+
+    /* =========================================
+       4. BUTTONS
+       ========================================= */
     .btn-terminal {
         background-color: var(--btn-bg);
         color: var(--btn-text);
@@ -153,6 +164,9 @@
         font-family: inherit;
         font-size: 14px;
         margin-top: 8px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
     }
 
     .btn-terminal:hover {
@@ -161,21 +175,24 @@
         box-shadow: 0 0 15px var(--border-active);
     }
 
-    /* Light Mode Button: Solid color, subtle lift */
     [data-theme="light"] .btn-terminal {
+        background-color: var(--btn-bg);
+        color: var(--btn-text);
         border: none;
         border-radius: 8px;
-        color: #ffffff;
         font-weight: 600;
-        box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        box-shadow: 0 4px 6px -1px var(--glow-strong);
     }
 
     [data-theme="light"] .btn-terminal:hover {
         background-color: #4338ca;
-        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+        box-shadow: 0 10px 15px -3px var(--glow-strong);
         transform: translateY(-1px);
     }
 
+    /* =========================================
+       5. ALERTS & ERRORS
+       ========================================= */
     .errorlist {
         list-style: none;
         padding-left: 0;
@@ -203,6 +220,9 @@
         border-radius: 8px;
     }
 
+    /* =========================================
+       6. TYPOGRAPHY & MISC UI ELEMENTS
+       ========================================= */
     .card-title {
         text-align: center;
         margin-bottom: 24px;
@@ -247,6 +267,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
         font-weight: 600;
+        box-shadow: 0 2px 5px var(--glow);
     }
 
     .theme-toggle:hover {
@@ -255,8 +276,29 @@
 
     [data-theme="light"] .theme-toggle {
         background: #ffffff;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 5px var(--glow);
         border-radius: 50px;
+        border: 1px solid var(--border);
+    }
+
+    .auth-link-container {
+        text-align: center;
+        margin-top: 18px;
+        font-size: 13px;
+    }
+
+    .auth-link {
+        color: var(--border-active);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .auth-link:hover {
+        text-decoration: underline;
+    }
+
+    [data-theme="light"] .auth-link {
+        color: var(--btn-bg);
     }
 </style>
 </head>
@@ -324,6 +366,12 @@
 
         <button type="submit" class="btn-terminal" id="submit-btn">EXECUTE SIGNUP</button>
     </form>
+
+    <div class="auth-link-container">
+        <a href="{% url 'login' %}" class="auth-link" id="auth-link-text">
+            &gt; [!] Already registered? Authenticate (Login)
+        </a>
+    </div>
 </div>
 
 <div class="status-footer" id="status-footer">
@@ -348,6 +396,11 @@
         document.getElementById("submit-btn").textContent = isLight
             ? "Create Account"
             : "EXECUTE SIGNUP";
+
+        // Navigation Link Text
+        document.getElementById("auth-link-text").textContent = isLight
+            ? "Already have an account? Sign In"
+            : "> [!] Already registered? Authenticate (Login)";
 
         // Footer Text
         document.getElementById("status-footer").innerHTML = isLight

@@ -9,9 +9,10 @@
 
 <style>
     /* =========================================
-       DARK MODE (TERMINAL / HACKER STYLE)
+       1. CSS VARIABLES (FOUNDATION)
        ========================================= */
     :root {
+        /* --- TERMINAL THEME (DARK) --- */
         --bg: #050806;
         --card-bg: #0c100d;
         --border: #22aa22;
@@ -20,15 +21,14 @@
         --text-dim: #1a591a;
         --font: 'Courier New', Courier, monospace;
         --btn-bg: #114411;
+        --btn-text: #33ff33;
         --error: #ff3333;
         --glow: rgba(51, 255, 51, 0.15);
         --glow-strong: rgba(51, 255, 51, 0.6);
     }
 
-    /* =========================================
-       LIGHT MODE (PREMIUM MODERN GUI)
-       ========================================= */
     [data-theme="light"] {
+        /* --- GUI THEME (LIGHT) --- */
         --bg: #f8fafc; /* Soft slate background */
         --card-bg: #ffffff; /* Pure white card */
         --border: #e2e8f0; /* Very subtle border */
@@ -37,6 +37,7 @@
         --text-dim: #64748b; /* Muted slate */
         --font: 'Inter', sans-serif; /* Modern clean font */
         --btn-bg: #4f46e5; /* Indigo button */
+        --btn-text: #ffffff;
         --error: #ef4444; /* Modern soft red */
         --glow: rgba(0, 0, 0, 0.05); /* Soft shadow base */
         --glow-strong: rgba(79, 70, 229, 0.2); /* Indigo focus ring */
@@ -57,6 +58,9 @@
         transition: background-color 0.4s ease, color 0.4s ease;
     }
 
+    /* =========================================
+       2. CARDS & CONTAINERS
+       ========================================= */
     .terminal-card {
         background-color: var(--card-bg);
         border: 2px solid var(--border);
@@ -68,7 +72,6 @@
         transition: all 0.4s ease;
     }
 
-    /* Light Mode Card: Soft shadow, rounded corners, no heavy border */
     [data-theme="light"] .terminal-card {
         border: 1px solid var(--border);
         border-radius: 16px;
@@ -76,6 +79,9 @@
         padding: 32px;
     }
 
+    /* =========================================
+       3. INPUTS & FIELDS
+       ========================================= */
     .terminal-card input {
         background-color: var(--bg);
         color: var(--text);
@@ -88,7 +94,6 @@
         font-size: 14px;
     }
 
-    /* Light Mode Inputs: Soft background, rounded, focus ring */
     [data-theme="light"] .terminal-card input {
         background-color: #f1f5f9;
         border: 1px solid #cbd5e1;
@@ -107,6 +112,9 @@
         box-shadow: 0 0 0 3px var(--glow-strong);
     }
 
+    /* =========================================
+       4. BUTTONS
+       ========================================= */
     .btn-terminal {
         background-color: var(--btn-bg);
         color: var(--text);
@@ -128,22 +136,25 @@
         box-shadow: 0 0 15px var(--border-active);
     }
 
-    /* Light Mode Button: Solid color, subtle lift on hover */
     [data-theme="light"] .btn-terminal {
+        background-color: var(--btn-bg);
         border: none;
         border-radius: 8px;
-        color: #ffffff;
+        color: var(--btn-text);
         padding: 12px;
         font-weight: 600;
         box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
     }
 
     [data-theme="light"] .btn-terminal:hover {
-        background-color: #4338ca; /* Darker indigo */
+        background-color: #4338ca;
         box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
         transform: translateY(-1px);
     }
 
+    /* =========================================
+       5. ALERTS & ERRORS
+       ========================================= */
     .errorlist, .text-danger {
         color: var(--error);
         font-size: 12px;
@@ -164,7 +175,6 @@
         text-align: center;
     }
 
-    /* Light Mode Alert: Soft red background, no harsh border */
     [data-theme="light"] .alert-danger {
         background-color: #fef2f2;
         border: 1px solid #fecaca;
@@ -172,6 +182,9 @@
         border-radius: 8px;
     }
 
+    /* =========================================
+       6. TYPOGRAPHY & LAYOUT UTILITIES
+       ========================================= */
     .field-group { margin-bottom: 18px; }
 
     .label-line {
@@ -239,6 +252,26 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         border-radius: 50px;
     }
+
+    .auth-link-container {
+        text-align: center;
+        margin-top: 18px;
+        font-size: 13px;
+    }
+
+    .auth-link {
+        color: var(--border-active);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .auth-link:hover {
+        text-decoration: underline;
+    }
+
+    [data-theme="light"] .auth-link {
+        color: var(--btn-bg);
+    }
 </style>
 </head>
 <body data-theme="terminal">
@@ -277,8 +310,15 @@
             {{ form.as_p }}
         {% endif %}
 
-        <button type="submit" class="btn-terminal" id="submit-btn">DECRYPT & LOGIN</button>
+       <button type="submit" class="btn-terminal" id="submit-btn">DECRYPT & LOGIN</button>
     </form>
+
+    <!-- Navigation to Signup -->
+    <div class="auth-link-container">
+        <a href="{% url 'signup' %}" class="auth-link" id="auth-link-text">
+            &gt; [!] New user? Initialize Signup
+        </a>
+    </div>
 </div>
 
 <div class="status-footer" id="status-footer">
@@ -303,6 +343,11 @@
         document.getElementById("submit-btn").textContent = isLight
             ? "Sign In"
             : "DECRYPT & LOGIN";
+
+        // Navigation Link Text
+        document.getElementById("auth-link-text").textContent = isLight
+            ? "Don't have an account? Sign Up"
+            : "> [!] New user? Initialize Signup";
 
         // Footer Text
         document.getElementById("status-footer").innerHTML = isLight
