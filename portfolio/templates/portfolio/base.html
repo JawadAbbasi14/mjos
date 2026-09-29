@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <meta
+        name="description"
+        content="MJOS Portfolio — Independent Cybersecurity Specialist & Developer."
+    >
+
+    <meta
+        name="theme-color"
+        content="#f8fafc"
+    >
+
+    <title>
+        {% block title %}MJ | MJOS Portfolio{% endblock %}
+    </title>
+
+
+    <!-- =========================================================
+         THEME RESTORE
+         Runs before first paint to prevent flash of wrong theme.
+         GUI = light
+         Terminal = dark
+         ========================================================= -->
+    <script>
+        (function () {
+            var theme = "light";
+
+            try {
+                var saved = localStorage.getItem("mjos_theme");
+
+                if (saved === "light" || saved === "dark") {
+                    theme = saved;
+                }
+            } catch (error) {
+                /* Keep default GUI mode if storage is unavailable. */
+            }
+
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+
+
+    <style>
+
+        /* =========================================================
+           MJOS DESIGN TOKENS
+           ========================================================= */
+
+        :root {
+            /* TERMINAL / DARK */
+            --bg: #050806;
+            --card-bg: #0c100d;
+            --surface: #101610;
+
+            --border: #22aa22;
+            --border-soft: #173b1b;
+            --border-active: #33ff33;
+
+            --text: #33ff33;
+            --text-dim: #1a591a;
+            --muted: #4fae4f;
+
+            --font:
+                "Courier New",
+                Courier,
+                monospace;
+
+            --btn-bg: #114411;
+            --btn-text: #33ff33;
+
+            --error: #ff3333;
+
+            --glow:
+                rgba(51, 255, 51, 0.15);
+
+            --glow-strong:
+                rgba(51, 255, 51, 0.60);
+
+            --radius: 8px;
+
+            --container-width: 1180px;
+
+            --header-height: 68px;
+
+            --card-shadow:
+                0 0 0 1px var(--glow),
+                0 0 18px var(--glow);
+
+            --label-case: uppercase;
+            --label-tracking: 0.08em;
+        }
+
+
+        /* =========================================================
+           GUI / LIGHT THEME
+           ========================================================= */
+
+        [data-theme="light"] {
+
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --surface: #f1f5f9;
+
+            --border: #e2e8f0;
+            --border-soft: #eef2f7;
+            --border-active: #4f46e5;
+
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --muted: #64748b;
+
+            --font:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            --btn-bg: #4f46e5;
+            --btn-text: #ffffff;
+
+            --error: #ef4444;
+
+            --glow:
+                rgba(15, 23, 42, 0.05);
+
+            --glow-strong:
+                rgba(79, 70, 229, 0.20);
+
+            --radius: 12px;
+
+            --card-shadow:
+                0 1px 2px rgba(15, 23, 42, 0.04),
+                0 8px 24px rgba(15, 23, 42, 0.06);
+
+            --label-case: none;
+            --label-tracking: 0;
+        }
+
+
+        /* =========================================================
+           RESET
+           ========================================================= */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+
+            background: var(--bg);
+            color: var(--text);
+
+            font-family: var(--font);
+            line-height: 1.6;
+
+            overflow-x: hidden;
+
+            transition:
+                background-color 0.25s ease,
+                color 0.25s ease;
+        }
+
+
+        body::selection {
+            background: var(--border-active);
+            color: var(--bg);
+        }
+
+
+        a {
+            color: inherit;
+        }
+
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+
+        :focus-visible {
+            outline:
+                2px solid var(--border-active);
+
+            outline-offset: 3px;
+        }
+
+
+        /* =========================================================
+           PAGE CONTAINER
+           ========================================================= */
+
+        .container {
+            width: min(
+                var(--container-width),
+                calc(100% - 32px)
+            );
+
+            margin-inline: auto;
+        }
+
+
+        /* =========================================================
+           SITE HEADER
+           ========================================================= */
+
+        .site-header {
+
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            border-bottom:
+                1px solid var(--border);
+
+            background:
+                color-mix(
+                    in srgb,
+                    var(--card-bg) 88%,
+                    transparent
+                );
+
+            backdrop-filter: blur(14px);
+
+            transition:
+                background-color 0.25s ease,
+                border-color 0.25s ease;
+        }
+
+
+        [data-theme="dark"] .site-header {
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.20);
+        }
+
+
+        .site-header__inner {
+
+            min-height: var(--header-height);
+
+            display: flex;
+            align-items: center;
+
+            gap: 1rem;
+
+            padding-block:
+                0.7rem;
+        }
+
+
+        /* =========================================================
+           BRAND
+           ========================================================= */
+
+        .brand {
+
+            display: inline-flex;
+            align-items: center;
+
+            gap: 0.65rem;
+
+            flex: 0 0 auto;
+
+            text-decoration: none;
+
+            font-size: 0.95rem;
+            font-weight: 800;
+
+            letter-spacing:
+                0.10em;
+
+            white-space: nowrap;
+        }
+
+
+        .brand__mark {
+
+            width: 10px;
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: var(--border-active);
+
+            box-shadow:
+                0 0 12px var(--glow-strong);
+        }
+
+
+        [data-theme="light"] .brand__mark {
+            box-shadow: none;
+        }
+
+
+        .brand__text {
+            color: var(--text);
+        }
+
+
+        .brand__meta {
+
+            color: var(--text-dim);
+
+            font-size: 0.64rem;
+            font-weight: 600;
+
+            letter-spacing:
+                0.08em;
+        }
+
+
+        /* =========================================================
+           NAVIGATION
+           ========================================================= */
+
+        .site-nav {
+
+            flex: 1 1 auto;
+
+            min-width: 0;
+        }
+
+
+        .site-nav ul {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap:
+                0.2rem
+                0.35rem;
+
+            list-style: none;
+
+            margin: 0;
+            padding: 0;
+        }
+
+
+        .site-nav a,
+        .site-nav .is-soon {
+
+            display: inline-flex;
+            align-items: center;
+
+            min-height: 34px;
+
+            padding:
+                0.35rem
+                0.65rem;
+
+            border:
+                1px solid transparent;
+
+            border-radius:
+                calc(var(--radius) - 4px);
+
+            color: var(--text-dim);
+
+            font-size: 0.78rem;
+
+            text-decoration: none;
+
+            transition:
+                color 0.18s ease,
+                border-color 0.18s ease,
+                background-color 0.18s ease;
+        }
+
+
+        .site-nav a:hover,
+        .site-nav a[aria-current="page"] {
+
+            color: var(--text);
+
+            background:
+                var(--glow);
+        }
+
+
+        [data-theme="dark"] .site-nav a:hover,
+        [data-theme="dark"] .site-nav a[aria-current="page"] {
+
+            border-color:
+                var(--border-soft);
+        }
+
+
+        [data-theme="light"] .site-nav a:hover,
+        [data-theme="light"] .site-nav a[aria-current="page"] {
+
+            border-color:
+                var(--border);
+        }
+
+
+        .site-nav .is-soon {
+
+            opacity: 0.55;
+
+            cursor: default;
+        }
+
+
+        /* =========================================================
+           THEME TOGGLE
+           ========================================================= */
+
+        .theme-toggle {
+
+            flex: 0 0 auto;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 0.45rem;
+
+            min-height: 34px;
+
+            padding:
+                0.38rem
+                0.75rem;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                calc(var(--radius) - 4px);
+
+            background:
+                transparent;
+
+            color: var(--text);
+
+            font-size: 0.72rem;
+            font-weight: 700;
+
+            letter-spacing:
+                var(--label-tracking);
+
+            cursor: pointer;
+
+            transition:
+                color 0.18s ease,
+                border-color 0.18s ease,
+                background-color 0.18s ease,
+                transform 0.18s ease;
+        }
+
+
+        .theme-toggle:hover {
+
+            border-color:
+                var(--border-active);
+
+            background:
+                var(--glow);
+        }
+
+
+        [data-theme="light"] .theme-toggle:hover {
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 6px 18px rgba(15, 23, 42, 0.07);
+        }
+
+
+        .theme-toggle__indicator {
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background:
+                var(--border-active);
+        }
+
+
+        /* =========================================================
+           MAIN
+           ========================================================= */
+
+        main {
+            flex: 1 0 auto;
+        }
+
+
+        /* =========================================================
+           GENERIC BUTTONS
+           Used by home.html
+           ========================================================= */
+
+        .btn {
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 42px;
+
+            padding:
+                0.65rem
+                1.1rem;
+
+            border:
+                1px solid var(--btn-bg);
+
+            border-radius:
+                var(--radius);
+
+            background:
+                var(--btn-bg);
+
+            color:
+                var(--btn-text);
+
+            font: inherit;
+
+            font-size: 0.88rem;
+            font-weight: 700;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.18s ease,
+                border-color 0.18s ease,
+                background-color 0.18s ease,
+                color 0.18s ease,
+                box-shadow 0.18s ease;
+        }
+
+
+        .btn:hover {
+
+            transform:
+                translateY(-1px);
+
+            box-shadow:
+                0 8px 22px var(--glow-strong);
+        }
+
+
+        [data-theme="dark"] .btn:hover {
+
+            box-shadow:
+                0 0 16px var(--glow-strong);
+        }
+
+
+        .btn--ghost {
+
+            background:
+                transparent;
+
+            color:
+                var(--text);
+
+            border-color:
+                var(--border);
+        }
+
+
+        .btn--ghost:hover {
+
+            border-color:
+                var(--border-active);
+        }
+
+
+        [data-theme="light"] .btn--ghost:hover {
+
+            background:
+                rgba(79, 70, 229, 0.04);
+
+            box-shadow:
+                none;
+        }
+
+
+        /* =========================================================
+           GENERIC CARD
+           Used throughout portfolio pages
+           ========================================================= */
+
+        .card {
+
+            background:
+                var(--card-bg);
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                var(--radius);
+
+            box-shadow:
+                var(--card-shadow);
+
+            padding:
+                1.25rem;
+
+            transition:
+                background-color 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+
+        /* =========================================================
+           SITE FOOTER
+           ========================================================= */
+
+        .site-footer {
+
+            margin-top:
+                4rem;
+
+            border-top:
+                1px solid var(--border);
+
+            background:
+                var(--card-bg);
+
+            color:
+                var(--text-dim);
+
+            font-size:
+                0.74rem;
+        }
+
+
+        .site-footer__inner {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 1rem;
+
+            flex-wrap: wrap;
+
+            padding-block:
+                1.15rem;
+        }
+
+
+        .site-footer__brand {
+
+            color:
+                var(--text);
+
+            font-weight:
+                700;
+
+            letter-spacing:
+                0.05em;
+        }
+
+
+        .site-footer__meta {
+
+            color:
+                var(--text-dim);
+
+            text-align:
+                right;
+        }
+
+
+        /* =========================================================
+           THEME TRANSITION
+           ========================================================= */
+
+        html.theme-anim *,
+        html.theme-anim *::before,
+        html.theme-anim *::after {
+
+            transition:
+                background-color 0.35s ease,
+                color 0.35s ease,
+                border-color 0.35s ease,
+                box-shadow 0.35s ease,
+                transform 0.35s ease !important;
+        }
+
+
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+
+            animation-duration:
+                0.35s;
+
+            animation-timing-function:
+                ease;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 920px) {
+
+            .site-header__inner {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .brand {
+                margin-right: auto;
+            }
+
+            .site-nav {
+                order: 3;
+                flex-basis: 100%;
+            }
+
+            .site-nav ul {
+                justify-content: flex-start;
+                padding-top: 0.2rem;
+            }
+
+            .theme-toggle {
+                order: 2;
+            }
+        }
+
+
+        @media (max-width: 620px) {
+
+            .container {
+                width:
+                    min(
+                        100% - 22px,
+                        var(--container-width)
+                    );
+            }
+
+
+            :root {
+                --header-height: auto;
+            }
+
+
+            .site-header__inner {
+                padding-block:
+                    0.65rem;
+            }
+
+
+            .brand__meta {
+                display: none;
+            }
+
+
+            .site-nav ul {
+
+                display: grid;
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+                gap: 0.35rem;
+
+                width: 100%;
+            }
+
+
+            .site-nav a,
+            .site-nav .is-soon {
+
+                width: 100%;
+
+                justify-content: center;
+            }
+
+
+            .theme-toggle {
+
+                padding-inline:
+                    0.6rem;
+            }
+
+
+            .site-footer__inner {
+
+                align-items:
+                    flex-start;
+
+                flex-direction:
+                    column;
+            }
+
+
+            .site-footer__meta {
+
+                text-align:
+                    left;
+            }
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+
+            html {
+                scroll-behavior: auto;
+            }
+
+
+            *,
+            *::before,
+            *::after {
+
+                transition:
+                    none !important;
+            }
+
+
+            ::view-transition-old(root),
+            ::view-transition-new(root) {
+
+                animation:
+                    none !important;
+            }
+        }
+
+    </style>
+
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+
+<body>
+
+    <!-- =========================================================
+         SITE HEADER
+         ========================================================= -->
+
+    <header class="site-header">
+
+        <div class="container site-header__inner">
+
+
+            <!-- BRAND -->
+
+            <a
+                class="brand"
+                href="/portfolio/"
+                aria-label="MJOS Portfolio Home"
+            >
+
+                <span
+                    class="brand__mark"
+                    aria-hidden="true"
+                ></span>
+
+                <span class="brand__text">
+                    MJOS
+                </span>
+
+                <span class="brand__meta">
+                    / PORTFOLIO
+                </span>
+
+            </a>
+
+
+            <!-- NAVIGATION -->
+
+            <nav
+                class="site-nav"
+                aria-label="Portfolio navigation"
+            >
+
+                <ul>
+
+                    <li>
+                        <a
+                            href="/portfolio/"
+                            aria-current="page"
+                        >
+                            Home
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <span
+                            class="is-soon"
+                            title="Module not implemented yet"
+                        >
+                            About
+                        </span>
+                    </li>
+
+
+                    <li>
+                        <span
+                            class="is-soon"
+                            title="Module not implemented yet"
+                        >
+                            CV
+                        </span>
+                    </li>
+
+
+                    <li>
+                        <span
+                            class="is-soon"
+                            title="Module not implemented yet"
+                        >
+                            Education
+                        </span>
+                    </li>
+
+
+                    <li>
+                        <span
+                            class="is-soon"
+                            title="Module not implemented yet"
+                        >
+                            Experience
+                        </span>
+                    </li>
+
+
+                    <li>
+                        <span
+                            class="is-soon"
+                            title="Module not implemented yet"
+                        >
+                            Certifications
+                        </span>
+                    </li>
+
+
+                    <li>
+                        <span
+                            class="is-soon"
+                            title="Module not implemented yet"
+                        >
+                            Services
+                        </span>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <!-- THEME TOGGLE -->
+
+            <button
+                type="button"
+                class="theme-toggle"
+                id="theme-toggle"
+                aria-pressed="false"
+                aria-label="Switch visual mode"
+            >
+
+                <span
+                    class="theme-toggle__indicator"
+                    aria-hidden="true"
+                ></span>
+
+                <span id="theme-toggle-label">
+                    Terminal
+                </span>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+         ========================================================= -->
+
+    <main>
+
+        {% block content %}{% endblock %}
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer class="site-footer">
+
+        <div class="container site-footer__inner">
+
+            <span class="site-footer__brand">
+                MJOS / PORTFOLIO
+            </span>
+
+            <span class="site-footer__meta">
+                Independent cybersecurity · development · engineering
+            </span>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================================================
+         THEME ENGINE
+         ========================================================= -->
+
+    <script>
+
+        (function () {
+
+            var root =
+                document.documentElement;
+
+            var button =
+                document.getElementById(
+                    "theme-toggle"
+                );
+
+            var label =
+                document.getElementById(
+                    "theme-toggle-label"
+                );
+
+
+            function currentTheme() {
+
+                return root.getAttribute(
+                    "data-theme"
+                ) === "dark"
+                    ? "dark"
+                    : "light";
+            }
+
+
+            function renderThemeState() {
+
+                var terminal =
+                    currentTheme() === "dark";
+
+
+                button.setAttribute(
+                    "aria-pressed",
+                    terminal
+                        ? "true"
+                        : "false"
+                );
+
+
+                label.textContent =
+                    terminal
+                        ? "GUI"
+                        : "Terminal";
+            }
+
+
+            function applyTheme(nextTheme) {
+
+                root.setAttribute(
+                    "data-theme",
+                    nextTheme
+                );
+
+
+                try {
+
+                    localStorage.setItem(
+                        "mjos_theme",
+                        nextTheme
+                    );
+
+                } catch (error) {
+                    /* Continue without persistence. */
+                }
+
+
+                /*
+                 * Update browser UI color.
+                 */
+                var themeColor =
+                    nextTheme === "dark"
+                        ? "#050806"
+                        : "#f8fafc";
+
+
+                var themeMeta =
+                    document.querySelector(
+                        'meta[name="theme-color"]'
+                    );
+
+
+                if (themeMeta) {
+
+                    themeMeta.setAttribute(
+                        "content",
+                        themeColor
+                    );
+                }
+
+
+                renderThemeState();
+            }
+
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    var nextTheme =
+                        currentTheme() === "dark"
+                            ? "light"
+                            : "dark";
+
+
+                    var reducedMotion =
+                        window.matchMedia &&
+                        window.matchMedia(
+                            "(prefers-reduced-motion: reduce)"
+                        ).matches;
+
+
+                    if (
+                        document.startViewTransition &&
+                        !reducedMotion
+                    ) {
+
+                        document.startViewTransition(
+                            function () {
+                                applyTheme(nextTheme);
+                            }
+                        );
+
+                    } else {
+
+                        root.classList.add(
+                            "theme-anim"
+                        );
+
+
+                        applyTheme(
+                            nextTheme
+                        );
+
+
+                        if (!reducedMotion) {
+
+                            window.setTimeout(
+                                function () {
+
+                                    root.classList.remove(
+                                        "theme-anim"
+                                    );
+
+                                },
+                                400
+                            );
+
+                        } else {
+
+                            root.classList.remove(
+                                "theme-anim"
+                            );
+                        }
+                    }
+                }
+            );
+
+
+            /*
+             * Restore current state after DOM loads.
+             */
+            renderThemeState();
+
+        })();
+
+    </script>
+
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

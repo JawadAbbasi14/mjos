@@ -228,6 +228,10 @@
 <body data-theme="terminal">
 
 <button class="theme-toggle" onclick="toggleTheme()">⇄ TOGGLE VIEW</button>
+<div class="wellcone_back">
+    <h1>Welcome back <strong>{{ request.user.username }}!</strong></h1>
+    <br>
+</div>
 
 <div class="header-prompt" id="header-prompt">
     <span>[root@mjos_server]:~#</span> access_granted()
