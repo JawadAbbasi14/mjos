@@ -42,6 +42,7 @@ def dashboard(request):
     return render(request, "accounts/dashboard.html")
 
 
+
 def logout_views(request):
     logout(request)
     return redirect("login")

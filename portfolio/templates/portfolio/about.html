@@ -1,0 +1,670 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}About MJ | MJOS{% endblock %}
+
+{% block extra_css %}
+<style>
+	.about-page {
+		--about-line: color-mix(in srgb, var(--border-active) 26%, var(--border));
+		--about-wash: color-mix(in srgb, var(--border-active) 7%, var(--card-bg));
+	}
+
+	.about-shell {
+		width: min(1080px, calc(100% - 32px));
+		margin-inline: auto;
+	}
+
+	.about-hero {
+		position: relative;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(240px, 0.48fr);
+		gap: 3rem;
+		align-items: end;
+		padding-block: 5.5rem 4rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.about-kicker,
+	.about-label {
+		margin: 0 0 0.8rem;
+		color: var(--border-active);
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.13em;
+		text-transform: uppercase;
+	}
+
+	.about-hero h1 {
+		margin: 0;
+		font-size: 6rem;
+		line-height: 0.95;
+	}
+
+	.about-role {
+		max-width: 23ch;
+		margin: 1.1rem 0 0;
+		font-size: 1.45rem;
+		font-weight: 700;
+		line-height: 1.3;
+	}
+
+	.about-statement {
+		max-width: 54ch;
+		margin: 1rem 0 0;
+		color: var(--text-dim);
+		font-size: 1rem;
+		line-height: 1.8;
+	}
+
+	.about-fact {
+		padding: 1.25rem 0 0 1.25rem;
+		border-top: 1px solid var(--about-line);
+		border-left: 1px solid var(--about-line);
+	}
+
+	.about-fact__label {
+		display: block;
+		margin-bottom: 0.4rem;
+		color: var(--text-dim);
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.about-fact__value {
+		display: block;
+		font-size: 1rem;
+		font-weight: 700;
+	}
+
+	.about-section {
+		padding-block: 3.5rem;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.about-section__heading {
+		display: grid;
+		grid-template-columns: 90px minmax(0, 1fr);
+		gap: 1rem;
+		align-items: baseline;
+		margin-bottom: 1.5rem;
+	}
+
+	.about-section__index {
+		color: var(--text-dim);
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+	}
+
+	.about-section h2 {
+		margin: 0;
+		font-size: 1.65rem;
+		line-height: 1.2;
+	}
+
+	.about-section__body {
+		max-width: 72ch;
+		margin-left: 106px;
+		color: var(--text-dim);
+		line-height: 1.8;
+	}
+
+	.about-section__body p {
+		margin: 0 0 0.8rem;
+	}
+
+	.about-work-grid,
+	.about-direction-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 0.8rem;
+		margin-left: 106px;
+	}
+
+	.about-work-item {
+		min-height: 78px;
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+		padding: 1rem;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		background: var(--about-wash);
+		font-weight: 600;
+		line-height: 1.5;
+	}
+
+	.about-work-item::before {
+		content: "";
+		width: 7px;
+		height: 7px;
+		flex: 0 0 auto;
+		border: 1px solid var(--border-active);
+	}
+
+	.about-direction {
+		padding: 1.2rem;
+		border-top: 2px solid var(--border-active);
+		background: var(--about-wash);
+	}
+
+	.about-direction h3 {
+		margin: 0 0 0.8rem;
+		font-size: 0.78rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.about-direction ul {
+		display: grid;
+		gap: 0.55rem;
+		margin: 0;
+		padding-left: 1.1rem;
+		color: var(--text-dim);
+		line-height: 1.6;
+	}
+
+	.about-learning {
+		margin: 1rem 0 0 106px;
+		padding-left: 1rem;
+		border-left: 2px solid var(--about-line);
+		color: var(--text-dim);
+		line-height: 1.8;
+	}
+
+	.about-links {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.75rem;
+		margin-left: 106px;
+	}
+
+	.about-link {
+		display: flex;
+		min-height: 108px;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1rem;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		color: inherit;
+		text-decoration: none;
+		transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+	}
+
+	.about-link:hover {
+		transform: translateY(-2px);
+		border-color: var(--border-active);
+		background: var(--about-wash);
+	}
+
+	.about-link__title {
+		font-weight: 700;
+	}
+
+	.about-link__action {
+		color: var(--text-dim);
+		font-size: 0.8rem;
+	}
+
+	.about-architecture,
+	.about-content-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.75rem;
+		margin-left: 106px;
+	}
+
+	.about-architecture__item,
+	.about-content-item {
+		min-width: 0;
+		padding: 1rem;
+		border: 1px solid var(--border);
+		background: var(--about-wash);
+	}
+
+	.about-architecture__item h3,
+	.about-content-item h3 {
+		margin: 0 0 0.45rem;
+		font-size: 0.92rem;
+	}
+
+	.about-architecture__item p,
+	.about-content-item p {
+		margin: 0;
+		color: var(--text-dim);
+		font-size: 0.84rem;
+		line-height: 1.65;
+	}
+
+	.about-state {
+		display: inline-block;
+		margin-bottom: 0.7rem;
+		color: var(--border-active);
+		font-size: 0.62rem;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.about-flow {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr auto 1fr;
+		align-items: center;
+		gap: 0.65rem;
+		margin: 1.3rem 0 0 106px;
+		padding: 1rem;
+		border-left: 2px solid var(--border-active);
+		background: var(--about-wash);
+		text-align: center;
+	}
+
+	.about-flow__node {
+		font-size: 0.76rem;
+		font-weight: 700;
+		line-height: 1.5;
+	}
+
+	.about-flow__arrow {
+		color: var(--border-active);
+	}
+
+	.about-origin {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.75rem;
+		margin: 1rem 0 0 106px;
+	}
+
+	.about-origin__item {
+		padding-top: 0.8rem;
+		border-top: 1px solid var(--about-line);
+	}
+
+	.about-origin__label,
+	.about-origin__value {
+		display: block;
+	}
+
+	.about-origin__label {
+		margin-bottom: 0.25rem;
+		color: var(--text-dim);
+		font-size: 0.65rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.about-origin__value {
+		font-size: 0.86rem;
+		font-weight: 700;
+	}
+
+	@media (max-width: 720px) {
+		.about-hero {
+			grid-template-columns: 1fr;
+			gap: 2rem;
+			padding-block: 3.5rem 2.5rem;
+		}
+
+		.about-hero h1 {
+			font-size: 4.5rem;
+		}
+
+		.about-fact {
+			max-width: 420px;
+		}
+
+		.about-section {
+			padding-block: 2.5rem;
+		}
+
+		.about-section__heading {
+			grid-template-columns: 58px minmax(0, 1fr);
+		}
+
+		.about-section__body,
+		.about-work-grid,
+		.about-direction-grid,
+		.about-learning,
+		.about-links,
+		.about-architecture,
+		.about-content-grid,
+		.about-flow,
+		.about-origin {
+			margin-left: 74px;
+		}
+
+		.about-links,
+		.about-architecture,
+		.about-content-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.about-flow {
+			grid-template-columns: 1fr;
+		}
+
+		.about-flow__arrow {
+			transform: rotate(90deg);
+		}
+	}
+
+	@media (max-width: 480px) {
+		.about-shell {
+			width: min(100% - 22px, 1080px);
+		}
+
+		.about-hero h1 {
+			font-size: 4rem;
+		}
+
+		.about-role {
+			font-size: 1.2rem;
+		}
+
+		.about-section__heading {
+			display: block;
+		}
+
+		.about-section__index {
+			display: block;
+			margin-bottom: 0.5rem;
+		}
+
+		.about-section__body,
+		.about-work-grid,
+		.about-direction-grid,
+		.about-learning,
+		.about-links,
+		.about-architecture,
+		.about-content-grid,
+		.about-flow,
+		.about-origin {
+			margin-left: 0;
+		}
+
+		.about-work-grid,
+		.about-direction-grid,
+		.about-links,
+		.about-architecture,
+		.about-content-grid,
+		.about-origin {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.about-link {
+			transition: none;
+		}
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-page">
+	<div class="about-shell">
+		<header class="about-hero">
+			<div>
+				<p class="about-kicker">MJOS / About the ecosystem</p>
+				<h1>MJ</h1>
+				<p class="about-role">Independent Cybersecurity Specialist &amp; Developer</p>
+				<p class="about-statement">
+					Building secure code, mastering financial markets, and scaling digital businesses.
+					Fueled by Python, Rust, and strategic trade.
+				</p>
+			</div>
+			<div class="about-fact" aria-label="Current work status">
+				<span class="about-fact__label">System direction</span>
+				<span class="about-fact__value">An evolving digital ecosystem</span>
+			</div>
+		</header>
+
+		<section class="about-section" aria-labelledby="about-identity-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">01 / IDENTITY</span>
+				<h2 id="about-identity-title">Who I Am</h2>
+			</div>
+			<div class="about-section__body">
+				<p>The independent cyber warrior / Developer. Operating at the intersection of offensive security, performance engineering, and digital entrepreneurship.</p>
+				<p>MJOS is built around MJ's independent technical work and is intended to give that work an organized home beyond a conventional portfolio page.</p>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-ecosystem-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">02 / ECOSYSTEM</span>
+				<h2 id="about-ecosystem-title">A Technical Digital Hub</h2>
+			</div>
+			<div class="about-section__body">
+				<p>MJOS is a custom-engineered web ecosystem and terminal interface built to serve as a private command center for engineering, deployment, and testing.</p>
+				<p>Its broader direction is a sovereign digital hub that can bring technical security projects, operational workflows, and private entrepreneurial frameworks into one organized environment. The ecosystem is evolving; not every envisioned area is implemented today.</p>
+			</div>
+			<div class="about-flow" aria-label="One ecosystem, distinct domains, clear responsibilities">
+				<span class="about-flow__node">One ecosystem</span>
+				<span class="about-flow__arrow" aria-hidden="true">→</span>
+				<span class="about-flow__node">Distinct domains</span>
+				<span class="about-flow__arrow" aria-hidden="true">→</span>
+				<span class="about-flow__node">Clear responsibilities</span>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-purpose-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">03 / PURPOSE</span>
+				<h2 id="about-purpose-title">Why MJOS Exists</h2>
+			</div>
+			<div class="about-section__body">
+				<p>MJOS is the first real system: an active development effort shaped around separate applications for separate technical domains.</p>
+				<p>The aim is to organize engineering work, experiments, learning structures, and operational workflows under one coherent digital hub, without collapsing them into one oversized portfolio page.</p>
+			</div>
+			<div class="about-origin" aria-label="Confirmed MJOS origin details">
+				<div class="about-origin__item">
+					<span class="about-origin__label">Initial architecture / setup</span>
+					<span class="about-origin__value">13-September-2026</span>
+				</div>
+				<div class="about-origin__item">
+					<span class="about-origin__label">Framework version</span>
+					<span class="about-origin__value">Django 5.2.17</span>
+				</div>
+				<div class="about-origin__item">
+					<span class="about-origin__label">Development state</span>
+					<span class="about-origin__value">Active development</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-architecture-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">04 / ARCHITECTURE</span>
+				<h2 id="about-architecture-title">Organized by Domain</h2>
+			</div>
+			<div class="about-section__body">
+				<p>Each major area can have its own dedicated Django application or section. Separation gives each domain a clear responsibility and lets it develop without duplicating its full content elsewhere.</p>
+			</div>
+			<div class="about-architecture">
+				<article class="about-architecture__item">
+					<span class="about-state">Current / Portfolio</span>
+					<h3>Identity and overview</h3>
+					<p>The existing Portfolio area anchors MJOS and links to its dedicated sections.</p>
+				</article>
+				<article class="about-architecture__item">
+					<span class="about-state">Planned / Evolving</span>
+					<h3>Projects and skills</h3>
+					<p>Dedicated homes for project details and a fuller technical breakdown.</p>
+				</article>
+				<article class="about-architecture__item">
+					<span class="about-state">Planned / Evolving</span>
+					<h3>Roadmaps and labs</h3>
+					<p>Learning systems, cybersecurity labs, and technical experiments.</p>
+				</article>
+				<article class="about-architecture__item">
+					<span class="about-state">Planned / Evolving</span>
+					<h3>Tools and knowledge</h3>
+					<p>Developer tools and technical knowledge, including educational security topics where appropriate.</p>
+				</article>
+				<article class="about-architecture__item">
+					<span class="about-state">Planned / Evolving</span>
+					<h3>Activity and discovery</h3>
+					<p>Possible activity, search, and notification areas as the system develops.</p>
+				</article>
+				<article class="about-architecture__item">
+					<span class="about-state">Planned / Evolving</span>
+					<h3>Integrations and core</h3>
+					<p>Future integrations and a central MJOS home as distinct system domains.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-content-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">05 / CONTENT</span>
+				<h2 id="about-content-title">What Belongs Here</h2>
+			</div>
+			<div class="about-section__body">
+				<p>MJOS is intended to bring related technical work into a central environment. The categories below describe the ecosystem's direction, not a claim that every section is live.</p>
+			</div>
+			<div class="about-content-grid">
+				<article class="about-content-item">
+					<span class="about-state">Current</span>
+					<h3>Identity and portfolio</h3>
+					<p>Confirmed professional identity and concise overview, with dedicated Portfolio destinations.</p>
+				</article>
+				<article class="about-content-item">
+					<span class="about-state">Evolving</span>
+					<h3>Projects and technical work</h3>
+					<p>Project context such as MJOS, MJ Store, Roadmap Project, Math Roadmap, and Quantum Computing Project.</p>
+				</article>
+				<article class="about-content-item">
+					<span class="about-state">Evolving</span>
+					<h3>Learning and knowledge</h3>
+					<p>Roadmaps, technical knowledge, and educational cybersecurity material as dedicated areas develop.</p>
+				</article>
+				<article class="about-content-item">
+					<span class="about-state">Evolving</span>
+					<h3>Labs, tools, and experiments</h3>
+					<p>Practical learning environments and developer tools organized separately from portfolio information.</p>
+				</article>
+				<article class="about-content-item">
+					<span class="about-state">Evolving</span>
+					<h3>Operational workflows</h3>
+					<p>Related engineering and entrepreneurial frameworks within the broader system direction.</p>
+				</article>
+				<article class="about-content-item">
+					<span class="about-state">Evolving</span>
+					<h3>Technical progress</h3>
+					<p>Development activity and related insights may have their own place as the ecosystem grows.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-modularity-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">06 / MODULARITY</span>
+				<h2 id="about-modularity-title">One System, Clear Boundaries</h2>
+			</div>
+			<div class="about-section__body">
+				<p>A visitor should not need to search one giant page for every kind of information. Identity belongs with Portfolio; project details, learning roadmaps, labs, tools, and knowledge can each live in their own domain as those areas are developed.</p>
+				<p>The same principle keeps Education, Certifications, Experience, CV, and Services focused on their own subjects instead of repeating their full contents here.</p>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-direction-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">07 / DIRECTION</span>
+				<h2 id="about-direction-title">Current Direction</h2>
+			</div>
+			<div class="about-direction-grid">
+				<div class="about-direction">
+					<h3>Current work</h3>
+					<ul>
+						<li>Developing MJOS</li>
+						<li>Cybersecurity and cybersecurity labs</li>
+						<li>Full-stack development</li>
+						<li>Market trading frameworks</li>
+						<li>Digital-business automation</li>
+						<li>Strengthening technical foundations</li>
+					</ul>
+				</div>
+				<div class="about-direction">
+					<h3>Current learning</h3>
+					<ul>
+						<li>Rust and Linux / Bash</li>
+						<li>Advanced Cybersecurity</li>
+						<li>AI foundations and Mathematics</li>
+						<li>Quantum Computing</li>
+						<li>Systems-related knowledge</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-building-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">08 / DEVELOPMENT</span>
+				<h2 id="about-building-title">Building and Learning</h2>
+			</div>
+			<div class="about-section__body">
+				<p>Technical growth is self-taught and self-directed. MJOS is being developed alongside that process as a place to organize systems, experiments, learning structures, and development work.</p>
+				<p>The confirmed technologies include Python, Django, JavaScript, PostgreSQL, and Git/GitHub. Rust, Linux/Bash, AI foundations, mathematics, quantum computing, and systems knowledge remain learning areas.</p>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-evolution-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">09 / EVOLUTION</span>
+				<h2 id="about-evolution-title">An Evolving System</h2>
+			</div>
+			<div class="about-section__body">
+				<p>As technical work develops, MJOS can grow to include new projects, experiments, labs, tools, learning roadmaps, knowledge, development work, and operational systems. Each area is intended to have a clear home rather than appear as an unconnected addition.</p>
+				<p>This is an ongoing direction, not a release schedule or a claim that planned features are already available.</p>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-return-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">10 / CONTINUITY</span>
+				<h2 id="about-return-title">Why Return</h2>
+			</div>
+			<div class="about-section__body">
+				<p>MJOS is an evolving technical ecosystem. As projects, learning systems, experiments, and dedicated sections take shape, there can be more of the system to explore. Returning means seeing what has been developed since the last visit, without assuming a particular schedule or outcome.</p>
+			</div>
+		</section>
+
+		<section class="about-section" aria-labelledby="about-explore-title">
+			<div class="about-section__heading">
+				<span class="about-section__index">11 / EXPLORE</span>
+				<h2 id="about-explore-title">Explore the Ecosystem</h2>
+			</div>
+			<div class="about-section__body">
+				<p>MJOS is organized as interconnected but distinct domains. These existing Portfolio destinations keep their subjects separate; future ecosystem areas will be linked when they have real pages.</p>
+			</div>
+			<nav class="about-links" aria-label="Existing Portfolio sections">
+				<a class="about-link" href="{% url 'education' %}">
+					<span class="about-link__title">Education</span>
+					<span class="about-link__action">View Education →</span>
+				</a>
+				<a class="about-link" href="{% url 'certifications' %}">
+					<span class="about-link__title">Certifications</span>
+					<span class="about-link__action">View Certifications →</span>
+				</a>
+				<a class="about-link" href="{% url 'experience' %}">
+					<span class="about-link__title">Experience</span>
+					<span class="about-link__action">View Experience →</span>
+				</a>
+				<a class="about-link" href="{% url 'cv' %}">
+					<span class="about-link__title">CV</span>
+					<span class="about-link__action">View CV →</span>
+				</a>
+				<a class="about-link" href="{% url 'services' %}">
+					<span class="about-link__title">Services</span>
+					<span class="about-link__action">View Services →</span>
+				</a>
+			</nav>
+		</section>
+	</div>
+</div>
+{% endblock %}

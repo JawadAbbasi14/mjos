@@ -885,7 +885,7 @@
 
             <a
                 class="brand"
-                href="/portfolio/"
+                href="{% url 'home' %}"
                 aria-label="MJOS Portfolio Home"
             >
 
@@ -916,8 +916,8 @@
 
                     <li>
                         <a
-                            href="/portfolio/"
-                            aria-current="page"
+                            href="{% url 'home' %}"
+                            {% if request.resolver_match.url_name == "home" %}aria-current="page"{% endif %}
                         >
                             Home
                         </a>
@@ -925,12 +925,12 @@
 
 
                     <li>
-                        <span
-                            class="is-soon"
-                            title="Module not implemented yet"
+                        <a
+                            href="{% url 'about' %}"
+                            {% if request.resolver_match.url_name == "about" %}aria-current="page"{% endif %}
                         >
                             About
-                        </span>
+                        </a>
                     </li>
 
 

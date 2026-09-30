@@ -3,17 +3,18 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
 
-@login_required(login_url="login")
 def base_views(request):
     return render("request",'portfolio/home.html')
 
 
+
+@login_required(login_url="login")
 def portfolio_home_views(request):
     return render(request, "portfolio/home.html")
 
 
 def about_views(request):
-    return HttpResponse('portfolio about html')
+    return render(request, "portfolio/about.html")
 
 
 def cv_views(request):
