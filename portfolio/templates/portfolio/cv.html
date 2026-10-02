@@ -1,0 +1,600 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+
+{% block title %}Curriculum Vitae | MJOS{% endblock %}
+
+{% block extra_css %}
+<style>
+	.cv-stage {
+		--cv-ink: #1c2925;
+		--cv-muted: #53635d;
+		--cv-line: #d8e0dc;
+		--cv-accent: #16734f;
+		--cv-paper: #fff;
+		--cv-tint: #f3f7f4;
+		padding: 1.5rem 1rem 3rem;
+		background:
+			radial-gradient(ellipse at 50% 0, rgba(40, 125, 82, 0.12), transparent 48%),
+			var(--bg);
+	}
+
+	.cv-toolbar {
+		width: min(210mm, 100%);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin: 0 auto 1rem;
+	}
+
+	.cv-toolbar__back {
+		color: var(--text-dim);
+		font-size: 0.82rem;
+		text-decoration: none;
+	}
+
+	.cv-toolbar__back:hover {
+		color: var(--text);
+	}
+
+	.cv-sheet {
+		width: min(210mm, 100%);
+		min-height: 297mm;
+		margin-inline: auto;
+		padding: 12mm 13mm 11mm;
+		background: var(--cv-paper);
+		color: var(--cv-ink);
+		box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+		font-family: Inter, "Segoe UI", system-ui, sans-serif;
+		font-size: 9.2pt;
+		line-height: 1.48;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+
+	.cv-sheet a {
+		color: var(--cv-accent);
+		text-decoration-color: rgba(22, 115, 79, 0.38);
+		text-underline-offset: 2px;
+		word-break: break-word;
+	}
+
+	.cv-masthead {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 31mm;
+		gap: 8mm;
+		align-items: center;
+		padding-bottom: 5mm;
+		border-bottom: 1px solid var(--cv-line);
+	}
+
+	.cv-document-label,
+	.cv-section__eyebrow {
+		margin: 0 0 2mm;
+		color: var(--cv-accent);
+		font-size: 7pt;
+		font-weight: 750;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	.cv-name {
+		margin: 0;
+		font-size: 31pt;
+		font-weight: 750;
+		letter-spacing: 0;
+		line-height: 1;
+	}
+
+	.cv-title {
+		max-width: 70ch;
+		margin: 2mm 0 0;
+		color: #34463e;
+		font-size: 11.2pt;
+		font-weight: 650;
+		line-height: 1.35;
+	}
+
+	.cv-portrait {
+		width: 31mm;
+		aspect-ratio: 4 / 5;
+		display: grid;
+		place-content: center;
+		gap: 1mm;
+		overflow: hidden;
+		border: 1px solid #c8d6ce;
+		border-top: 2px solid var(--cv-accent);
+		background: var(--cv-tint);
+		color: var(--cv-accent);
+		text-align: center;
+	}
+
+	.cv-portrait__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.cv-portrait__monogram {
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 21pt;
+		font-weight: 700;
+		line-height: 1;
+	}
+
+	.cv-portrait__label {
+		color: var(--cv-muted);
+		font-size: 6pt;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.cv-contact {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1mm 5mm;
+		margin-top: 4mm;
+		color: var(--cv-muted);
+		font-size: 7.5pt;
+	}
+
+	.cv-contact__item {
+		min-width: 0;
+	}
+
+	.cv-contact__label {
+		margin-right: 1.3mm;
+		color: #76857e;
+		font-size: 6.5pt;
+		font-weight: 700;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.cv-profile {
+		padding: 3mm 0;
+		border-bottom: 1px solid var(--cv-line);
+	}
+
+	.cv-profile h2,
+	.cv-section h2 {
+		margin: 0 0 2mm;
+		color: var(--cv-ink);
+		font-size: 10pt;
+		font-weight: 750;
+		line-height: 1.2;
+	}
+
+	.cv-profile p {
+		margin: 0;
+		color: #394a43;
+		font-size: 8.7pt;
+		line-height: 1.52;
+	}
+
+	.cv-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 0.76fr) minmax(0, 1.55fr);
+		gap: 7mm;
+		padding-top: 3.5mm;
+	}
+
+	.cv-sidebar {
+		padding-right: 5mm;
+		border-right: 1px solid var(--cv-line);
+	}
+
+	.cv-section {
+		margin-bottom: 2.8mm;
+		break-inside: avoid;
+	}
+
+	.cv-section:last-child {
+		margin-bottom: 0;
+	}
+
+	.cv-section h2 {
+		padding-bottom: 1.5mm;
+		border-bottom: 1px solid var(--cv-line);
+	}
+
+	.cv-section__eyebrow {
+		margin-bottom: 1mm;
+		font-size: 6pt;
+	}
+
+	.cv-entry {
+		margin-top: 2.1mm;
+		break-inside: avoid;
+	}
+
+	.cv-entry__topline {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 2mm;
+	}
+
+	.cv-entry h3 {
+		margin: 0;
+		font-size: 8.4pt;
+		font-weight: 750;
+		line-height: 1.3;
+	}
+
+	.cv-entry__meta {
+		flex: 0 0 auto;
+		color: var(--cv-muted);
+		font-size: 6.8pt;
+		text-align: right;
+	}
+
+	.cv-entry p {
+		margin: 1mm 0 0;
+		color: #43534c;
+		font-size: 7.7pt;
+		line-height: 1.48;
+	}
+
+	.cv-entry__detail {
+		margin-top: 1mm;
+		color: var(--cv-muted);
+		font-size: 7pt;
+	}
+
+	.cv-list {
+		display: grid;
+		gap: 1.3mm;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		color: #43534c;
+		font-size: 7.6pt;
+	}
+
+	.cv-list li {
+		padding-left: 3mm;
+		position: relative;
+	}
+
+	.cv-list li::before {
+		position: absolute;
+		left: 0;
+		color: var(--cv-accent);
+		content: "•";
+	}
+
+	.cv-skill-group {
+		margin-top: 2.5mm;
+	}
+
+	.cv-skill-group strong {
+		display: block;
+		margin-bottom: 0.5mm;
+		color: #35463e;
+		font-size: 7pt;
+	}
+
+	.cv-skill-group p {
+		margin: 0;
+		color: var(--cv-muted);
+		font-size: 7.6pt;
+	}
+
+	.cv-project-link {
+		display: inline-block;
+		margin-top: 1mm;
+		font-size: 6.8pt;
+	}
+
+	.cv-note {
+		margin-top: 2mm;
+		padding: 2mm 2.5mm;
+		border-left: 1.5px solid var(--cv-accent);
+		background: var(--cv-tint);
+		color: #43534c;
+		font-size: 7.2pt;
+		line-height: 1.45;
+	}
+
+	.cv-footer {
+		display: flex;
+		justify-content: space-between;
+		gap: 4mm;
+		padding-top: 3mm;
+		margin-top: 5mm;
+		border-top: 1px solid var(--cv-line);
+		color: #718078;
+		font-size: 6.3pt;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	@media (max-width: 700px) {
+		.cv-stage {
+			padding: 1rem 0.65rem 2rem;
+		}
+
+		.cv-sheet {
+			width: 100%;
+			min-height: 0;
+			padding: 1.4rem 1.15rem;
+		}
+
+		.cv-masthead {
+			grid-template-columns: minmax(0, 1fr) 76px;
+			gap: 1rem;
+		}
+
+		.cv-portrait {
+			width: 76px;
+		}
+
+		.cv-name {
+			font-size: 28pt;
+		}
+
+		.cv-contact {
+			grid-template-columns: 1fr;
+			gap: 0.25rem;
+		}
+
+		.cv-layout {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 0;
+		}
+
+		.cv-sidebar {
+			padding-right: 0;
+			border-right: 0;
+		}
+
+		.cv-section {
+			margin-bottom: 1.3rem;
+		}
+
+		.cv-entry__topline {
+			align-items: flex-start;
+		}
+	}
+
+	@media (max-width: 380px) {
+		.cv-masthead {
+			grid-template-columns: minmax(0, 1fr) 62px;
+			gap: 0.65rem;
+		}
+
+		.cv-portrait {
+			width: 62px;
+		}
+
+		.cv-name {
+			font-size: 25pt;
+		}
+
+		.cv-contact__item a {
+			font-size: 0.92em;
+		}
+	}
+
+	@media print {
+		@page {
+			size: A4 portrait;
+			margin: 0;
+		}
+
+		html,
+		body {
+			width: 210mm;
+			min-height: 297mm;
+			margin: 0 !important;
+			background: #fff !important;
+			color: #1c2925 !important;
+			font-family: Inter, "Segoe UI", system-ui, sans-serif !important;
+			font-size: 9pt !important;
+			line-height: 1.42 !important;
+			-webkit-print-color-adjust: exact;
+			print-color-adjust: exact;
+		}
+
+		.site-header,
+		.site-footer,
+		.cv-toolbar {
+			display: none !important;
+		}
+
+		main {
+			flex: none !important;
+		}
+
+		.cv-stage {
+			padding: 0 !important;
+			background: #fff !important;
+		}
+
+		.cv-sheet {
+			width: 210mm !important;
+			min-height: 297mm !important;
+			margin: 0 !important;
+			padding: 12mm 13mm 11mm !important;
+			border: 0 !important;
+			box-shadow: none !important;
+			font-size: 9pt !important;
+		}
+
+		.cv-sheet a {
+			color: #135c40 !important;
+			text-decoration: underline !important;
+		}
+
+		.cv-section,
+		.cv-entry,
+		.cv-masthead,
+		.cv-profile {
+			break-inside: avoid;
+		}
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cv-stage">
+	<div class="cv-toolbar" aria-label="CV actions">
+		<a class="cv-toolbar__back" href="{% url 'home' %}">&larr; Return to MJOS</a>
+		<button class="btn" type="button" onclick="window.print()">Print / Save as PDF</button>
+	</div>
+
+	<article class="cv-sheet" aria-labelledby="cv-name">
+		<header class="cv-masthead">
+			<div>
+				<p class="cv-document-label">MJOS / Curriculum Vitae</p>
+				<h1 class="cv-name" id="cv-name">MJ</h1>
+				<p class="cv-title">Independent Cybersecurity Specialist &amp; Developer</p>
+				<div class="cv-contact" aria-label="Contact details">
+					<div class="cv-contact__item"><span class="cv-contact__label">Phone</span><a href="tel:03435256963">03435256963</a></div>
+					<div class="cv-contact__item"><span class="cv-contact__label">Email</span><a href="mailto:jawadabbasi1107@gmail.com">jawadabbasi1107@gmail.com</a></div>
+					<div class="cv-contact__item"><span class="cv-contact__label">GitHub</span><a href="https://github.com/JawadAbbasi14" target="_blank" rel="noopener noreferrer">github.com/JawadAbbasi14</a></div>
+					<div class="cv-contact__item"><span class="cv-contact__label">LinkedIn</span><a href="https://www.linkedin.com/in/jawad-abbasi-978a39369/" target="_blank" rel="noopener noreferrer">linkedin.com/in/jawad-abbasi-978a39369</a></div>
+					<div class="cv-contact__item"><span class="cv-contact__label">Portfolio source</span><a href="https://github.com/JawadAbbasi14/Mj-Porfolio" target="_blank" rel="noopener noreferrer">GitHub repository</a></div>
+				</div>
+			</div>
+			<div class="cv-portrait">
+				<img
+					class="cv-portrait__image"
+					src="{% static 'portfolio/images/cv_image.jpeg' %}"
+					alt="Portrait of MJ"
+				>
+			</div>
+		</header>
+
+		<section class="cv-profile cv-section" aria-labelledby="profile-heading">
+			<p class="cv-section__eyebrow">Professional Profile</p>
+			<h2 id="profile-heading">Software, security and systems</h2>
+			<p>
+				Independent developer with project-based software development experience and an ongoing focus on cybersecurity, performance engineering, financial markets and digital systems. Current work centers on building secure code and structured software, with Python, Rust and strategic trade among the stated areas of focus.
+			</p>
+		</section>
+
+		<div class="cv-layout">
+			<aside class="cv-sidebar" aria-label="Technical profile and credentials">
+				<section class="cv-section" aria-labelledby="technical-heading">
+					<p class="cv-section__eyebrow">Technical Profile</p>
+					<h2 id="technical-heading">Selected technologies</h2>
+					<div class="cv-skill-group">
+						<strong>Programming</strong>
+						<p>Python · JavaScript · Rust</p>
+					</div>
+					<div class="cv-skill-group">
+						<strong>Web development</strong>
+						<p>Django · Full-stack development</p>
+					</div>
+					<div class="cv-skill-group">
+						<strong>Data and workflow</strong>
+						<p>PostgreSQL · Git · GitHub</p>
+					</div>
+				</section>
+
+				<section class="cv-section" aria-labelledby="education-heading">
+					<p class="cv-section__eyebrow">Education</p>
+					<h2 id="education-heading">Computer Science</h2>
+					<div class="cv-entry">
+						<h3>Govt High Secondary School Majuhaan</h3>
+						<p>Abbottabad, KPK, Pakistan</p>
+						<p class="cv-entry__detail">15 June 2024</p>
+					</div>
+				</section>
+
+				<section class="cv-section" aria-labelledby="credentials-heading">
+					<p class="cv-section__eyebrow">Certifications &amp; Courses</p>
+					<h2 id="credentials-heading">Credentials</h2>
+					<div class="cv-entry">
+						<div class="cv-entry__topline">
+							<h3>Python Developer Certificate</h3>
+							<span class="cv-entry__meta">10 February 2025</span>
+						</div>
+						<a class="cv-project-link" href="https://github.com/JawadAbbasi14/Mj-Porfolio/blob/main/Mr%20Jawad%20Abbasi%20(1).pdf" target="_blank" rel="noopener noreferrer">View certificate PDF</a>
+					</div>
+					<div class="cv-entry">
+						<h3>IT Course · Azad Chaiwala Institute</h3>
+						<p>Approximately 6–8 months · In-person</p>
+						<p class="cv-entry__detail">Word, Excel, PowerPoint, typing, Google account basics, Windows, common software and practical AI-tool use for productivity.</p>
+					</div>
+				</section>
+
+				<section class="cv-section" aria-labelledby="learning-heading">
+					<p class="cv-section__eyebrow">Ongoing Learning</p>
+					<h2 id="learning-heading">Areas of study</h2>
+					<ul class="cv-list">
+						<li>Artificial intelligence and cybersecurity</li>
+						<li>Mathematics for AI, quantum computing and cybersecurity</li>
+						<li>Quantum computing</li>
+					</ul>
+				</section>
+			</aside>
+
+			<div class="cv-main">
+				<section class="cv-section" aria-labelledby="experience-heading">
+					<p class="cv-section__eyebrow">Experience</p>
+					<h2 id="experience-heading">Independent Software Developer</h2>
+					<div class="cv-entry__topline">
+						<p class="cv-entry__detail">Independent, project-based development</p>
+						<span class="cv-entry__meta">October 2024 — Present</span>
+					</div>
+					<p>
+						Approximately 2 years of ongoing software development. The active development journey began on 15 October 2024, with experience built through independent learning and software projects rather than a listed corporate employment history.
+					</p>
+				</section>
+
+				<section class="cv-section" aria-labelledby="projects-heading">
+					<p class="cv-section__eyebrow">Selected Project Work</p>
+					<h2 id="projects-heading">Independent development</h2>
+
+					<article class="cv-entry">
+						<div class="cv-entry__topline">
+							<h3>MJOS</h3>
+							<span class="cv-entry__meta">Current system</span>
+						</div>
+						<p>A Django-based personal digital platform organizing portfolio and related development work into distinct sections. Developed independently.</p>
+						<p class="cv-entry__detail">Python · Django</p>
+						<a class="cv-project-link" href="https://github.com/JawadAbbasi14/mjos" target="_blank" rel="noopener noreferrer">github.com/JawadAbbasi14/mjos</a>
+					</article>
+
+					<article class="cv-entry">
+						<div class="cv-entry__topline">
+							<h3>MJ Global Store</h3>
+							<span class="cv-entry__meta">Learning project</span>
+						</div>
+						<p>Full-stack e-commerce application developed as project-based learning work, with Django application development.</p>
+						<p class="cv-entry__detail">Python · Django · PostgreSQL</p>
+						<a class="cv-project-link" href="https://github.com/JawadAbbasi14/mj-global-store" target="_blank" rel="noopener noreferrer">github.com/JawadAbbasi14/mj-global-store</a>
+					</article>
+
+					<article class="cv-entry">
+						<div class="cv-entry__topline">
+							<h3>Cybersecurity Algorithms &amp; Projects</h3>
+							<span class="cv-entry__meta">In progress</span>
+						</div>
+						<p>Personal learning repository with Python algorithm implementations and example use cases, including hashing and AES encryption.</p>
+						<p class="cv-entry__detail">Python · Security-algorithm study</p>
+						<a class="cv-project-link" href="https://github.com/JawadAbbasi14/cybersecurity-projects" target="_blank" rel="noopener noreferrer">github.com/JawadAbbasi14/cybersecurity-projects</a>
+					</article>
+				</section>
+
+				<section class="cv-section" aria-labelledby="capabilities-heading">
+					<p class="cv-section__eyebrow">Capabilities</p>
+					<h2 id="capabilities-heading">Application development</h2>
+					<p>
+						Full-stack web development, Django-based web applications and custom software systems, grounded in the independent project work summarized above.
+					</p>
+				</section>
+			</div>
+		</div>
+
+		<footer class="cv-footer">
+			<span>MJ · MJOS</span>
+			<span>Independent development · October 2024 — Present</span>
+		</footer>
+	</article>
+</div>
+{% endblock %}

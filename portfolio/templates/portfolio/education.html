@@ -1,0 +1,55 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}Education | MJOS{% endblock %}
+
+{% block content %}
+<div class="portfolio-page">
+	<header class="portfolio-page__header">
+		<p class="portfolio-page__eyebrow">Learning Profile</p>
+		<h1 class="portfolio-page__title">Education</h1>
+		<p class="portfolio-page__intro">
+			My development path is centered on independent, continuous learning
+			across software development, cybersecurity, artificial intelligence,
+			mathematics, and emerging technologies.
+		</p>
+	</header>
+
+	<section class="portfolio-page__section" aria-labelledby="formal-education-heading">
+		<h2 class="portfolio-page__section-heading" id="formal-education-heading">Formal Education</h2>
+		<div class="card">
+			<h3>Computer Science</h3>
+			<p>Govt High Secondary School Majuhaan, Abbottabad, KPK, Pakistan</p>
+			<p>15 June 2024</p>
+		</div>
+	</section>
+
+	<section class="portfolio-page__section" aria-labelledby="self-directed-heading">
+		<h2 class="portfolio-page__section-heading" id="self-directed-heading">Self-Directed Technical Learning</h2>
+		<div class="card">
+			<p>
+				My technical learning is primarily self-directed, ongoing, and
+				organized around building knowledge independently. The areas below
+				describe learning focus, not formal academic qualifications.
+			</p>
+		</div>
+	</section>
+
+	<section class="portfolio-page__section" aria-labelledby="learning-focus-heading">
+		<h2 class="portfolio-page__section-heading" id="learning-focus-heading">Learning Focus</h2>
+		<ul class="portfolio-page__list">
+			<li>Artificial Intelligence</li>
+			<li>Cybersecurity</li>
+			<li>Full-Stack Development</li>
+			<li>Python</li>
+			<li>JavaScript</li>
+			<li>Django</li>
+			<li>Rust</li>
+			<li>Mathematics for AI, Quantum Computing, and Cybersecurity</li>
+			<li>Quantum Computing</li>
+		</ul>
+		<div class="portfolio-page__actions">
+			<a class="btn btn--ghost" href="{% url 'certifications' %}">View Certifications</a>
+		</div>
+	</section>
+</div>
+{% endblock %}

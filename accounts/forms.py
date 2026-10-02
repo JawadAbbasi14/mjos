@@ -3,6 +3,11 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import User, Feedback
 
 class Signupform(UserCreationForm):
+    age = forms.IntegerField(
+        min_value=18,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'min': '18'}),
+    )
+
     class Meta:
         model = User
         fields = ["username", "email", "remember", "age", "bio", "password1", "password2"]
@@ -10,7 +15,6 @@ class Signupform(UserCreationForm):
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your Fullname'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'example@mail.com'}),
-            'age': forms.NumberInput(attrs={'class': 'form-control', 'min': '18'}),
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 

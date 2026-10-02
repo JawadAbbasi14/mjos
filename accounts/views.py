@@ -1,8 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.decorators.http import require_POST
 from .forms import Signupform, Feedback_form
+
+
+def _account_redirect_url(request):
+    next_url = request.POST.get("next") or request.GET.get("next")
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return next_url
+    return "dashboard"
+
 
 def signup_views(request):
     if request.user.is_authenticated:
@@ -13,10 +27,11 @@ def signup_views(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("dashboard")
+            return redirect(_account_redirect_url(request))
     else:
         form = Signupform()
-    return render(request, "accounts/signup.html", {"form": form})
+    next_url = request.POST.get("next") or request.GET.get("next", "")
+    return render(request, "accounts/signup.html", {"form": form, "next": next_url})
 
 
 def login_views(request):
@@ -26,15 +41,12 @@ def login_views(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect("dashboard")
+            login(request, form.get_user())
+            return redirect(_account_redirect_url(request))
     else:
         form = AuthenticationForm()
-    return render(request, "accounts/login.html", {"form": form})
+    next_url = request.POST.get("next") or request.GET.get("next", "")
+    return render(request, "accounts/login.html", {"form": form, "next": next_url})
 
 
 @login_required(login_url='login')
@@ -43,9 +55,10 @@ def dashboard(request):
 
 
 
+@require_POST
 def logout_views(request):
     logout(request)
-    return redirect("login")
+    return redirect("home")
 
 
 @login_required(login_url='login')

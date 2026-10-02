@@ -1,0 +1,51 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}Services | MJOS{% endblock %}
+
+{% block content %}
+<div class="portfolio-page">
+	<header class="portfolio-page__header">
+		<p class="portfolio-page__eyebrow">Development Services</p>
+		<h1 class="portfolio-page__title">Services</h1>
+		<p class="portfolio-page__intro">
+			I build web applications and software systems through independent,
+			project-based development. The service areas below reflect work and
+			technical context represented in this portfolio.
+		</p>
+	</header>
+
+	<section class="portfolio-page__section" aria-labelledby="service-areas-heading">
+		<h2 class="portfolio-page__section-heading" id="service-areas-heading">Development Services</h2>
+		<div class="portfolio-page__grid">
+			<article class="card portfolio-page__card">
+				<h3>Full-Stack Web Development</h3>
+				<p>
+					Development of web applications across their user-facing
+					interfaces and server-side functionality, using the project
+					context and technologies that fit the work.
+				</p>
+			</article>
+			<article class="card portfolio-page__card">
+				<h3>Django-Based Web Applications</h3>
+				<p>
+					Building and extending web applications with Django, including
+					application structure, request handling, and integration with
+					web interfaces.
+				</p>
+			</article>
+			<article class="card portfolio-page__card">
+				<h3>Custom Software Systems</h3>
+				<p>
+					Developing structured software systems around defined areas of
+					functionality, with attention to keeping responsibilities clear
+					as the system grows.
+				</p>
+			</article>
+		</div>
+		<p class="portfolio-page__intro">
+			These offerings are grounded in independent project work. See the
+			<a href="{% url 'experience' %}">Experience page</a> for that development context.
+		</p>
+	</section>
+</div>
+{% endblock %}

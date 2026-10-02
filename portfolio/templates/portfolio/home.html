@@ -890,7 +890,7 @@
 
 
 {% block content %}
-<main class="portfolio-home">
+<div class="portfolio-home">
 
     <!-- =====================================================
          HERO
@@ -1182,9 +1182,8 @@
                     </h3>
 
                     <p>
-                        Selected technologies currently used across
-                        development, systems work, networking, and
-                        engineering workflows.
+                        A brief development snapshot. See the Experience page
+                        for project-based context.
                     </p>
 
                 </div>
@@ -1211,30 +1210,14 @@
 
                         <li class="skill-item">
                             <span class="skill-dot"></span>
-                            PostgreSQL
-                        </li>
-
-                        <li class="skill-item">
-                            <span class="skill-dot"></span>
                             Django
                         </li>
 
-                        <li class="skill-item">
-                            <span class="skill-dot"></span>
-                            Git
-                        </li>
-
-                        <li class="skill-item">
-                            <span class="skill-dot"></span>
-                            Advanced Networking
-                        </li>
-
-                        <li class="skill-item">
-                            <span class="skill-dot"></span>
-                            Shell Scripting
-                        </li>
-
                     </ul>
+
+                    <a class="app-card__arrow" href="{% url 'experience' %}">
+                        View development experience →
+                    </a>
 
                 </div>
 
@@ -1287,13 +1270,17 @@
                     </div>
 
                     <h3>
-                        Self-taught on the internet
+                        Education and learning background
                     </h3>
 
                     <p>
-                        Mastering advanced security domains,
-                        low-level scripting languages, and database engines.
+                        Formal education and self-directed learning are
+                        described on the dedicated Education page.
                     </p>
+
+                    <a class="app-card__arrow" href="{% url 'education' %}">
+                        View Education →
+                    </a>
 
                 </article>
 
@@ -1302,7 +1289,7 @@
 
                     <div class="info-card__top">
                         <span class="info-card__tag">
-                            Active Growth
+                            Credentials
                         </span>
 
                         <span class="info-card__symbol">
@@ -1311,24 +1298,14 @@
                     </div>
 
                     <h3>
-                        Current learning direction
+                        Certificates and courses
                     </h3>
 
-                    <ul class="growth-list">
+                    <p>Confirmed credentials are listed on the dedicated page.</p>
 
-                        <li>
-                            Autonomous scripts for digital business automation
-                        </li>
-
-                        <li>
-                            Advanced network hardening
-                        </li>
-
-                        <li>
-                            Real-time trading market data aggregation
-                        </li>
-
-                    </ul>
+                    <a class="app-card__arrow" href="{% url 'certifications' %}">
+                        View Certifications →
+                    </a>
 
                 </article>
 
@@ -1456,7 +1433,7 @@
 
                 <a
                     class="app-card"
-                    href="about"
+                    href="{% url 'about' %}"
                 >
                     <div class="app-card__top">
                         <span class="app-card__index">
@@ -1484,7 +1461,9 @@
 
                 <a
                     class="app-card"
-                    href="/projects/"
+                    href="https://github.com/JawadAbbasi14?tab=repositories"
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
                     <div class="app-card__top">
                         <span class="app-card__index">
@@ -1492,7 +1471,7 @@
                         </span>
 
                         <span class="app-card__state">
-                            Module
+                            GitHub
                         </span>
                     </div>
 
@@ -1512,7 +1491,7 @@
 
                 <a
                     class="app-card"
-                    href="education"
+                    href="{% url 'education' %}"
                 >
                     <div class="app-card__top">
                         <span class="app-card__index">
@@ -1700,9 +1679,11 @@
 
                     <a
                         class="btn btn--ghost"
-                        href="projects"
+                        href="https://github.com/JawadAbbasi14?tab=repositories"
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
-                        Open Project Node
+                        View GitHub Projects
                     </a>
 
                 </div>
@@ -1712,5 +1693,5 @@
         </div>
     </section>
 
-</main>
+</div>
 {% endblock %}
