@@ -6,27 +6,14 @@
     <title>MJOS | Projects Form</title>
 </head>
 <body>
-    <form method="GET" action="{% url 'project_form' %}">
-    <!-- Search Input -->
-    <input 
-        type="text" 
-        name="q" 
-        placeholder="Search projects..." 
-        value="{{ search_query }}"
-    >
-    
-    <!-- Category Filter Dropdown -->
-    <select name="category" onchange="this.form.submit()">
-        <option value="">All Categories</option>
-        {% for cat in categories %}
-            <option value="{{ cat.slug }}" {% if cat.slug == selected_category %}selected{% endif %}>
-                {{ cat.name }}
-            </option>
-        {% endfor %}
-    </select>
-    
+<h1> Well come on Projects </h1>
+<form action="" method="get">
+    <input type="text" name='q' placeholder="Enter Project Name to Serch">
     <button type="submit">Search</button>
 </form>
-   
-</body>
+{% for project in projects %}
+        <P>{{ project.title }}</P>
+        {% empty %}
+        <p> <strong> Not found in Database </strong></p>
+        {% endfor %}
 </html>
