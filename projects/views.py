@@ -4,11 +4,20 @@ from .models import Project, Category
 from django.shortcuts import redirect, render
 
 def project_list_view(request):
-    query = request.GET.get('name')
     projects = Project.objects.all()
-    print(query)
-
+    query = request.GET.get('name')
+    project_category = request.GET.get('project_category')
+  
     if query:
-        Q(title__icontains=query) | Q(description__icontains=query)
-
-    return render(request,'projects/projectform.html',{"projects":projects})
+       projects = projects.filter(
+           Q(title__icontains=query) | Q(description__icontains=query)
+       )
+       
+    if project_category:
+       # Yahan 'projects =' lagaya ha takay filter save ho sake
+       projects = projects.filter(
+           Q(category__slug=project_category)
+       )
+       
+    print(query, project_category)
+    return render(request, "projects/projectform.html", {"projects": projects})
