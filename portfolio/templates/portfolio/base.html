@@ -1232,6 +1232,16 @@
                         </a>
                     </li>
 
+
+                    <li>
+                        <a
+                            href="{% url 'project_form' %}"
+                            {% if request.resolver_match.url_name == "project_form" %}aria-current="page"{% endif %}
+                        >
+                            Projects
+                        </a>
+                    </li>
+
                     {% if request.user.is_authenticated %}
                     <li>
                         <a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == "dashboard" %}aria-current="page"{% endif %}>Dashboard</a>

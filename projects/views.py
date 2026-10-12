@@ -1,23 +1,36 @@
-from django.shortcuts import render
+from django.core.paginator import Paginator
 from django.db.models import Q
-from .models import Project, Category
-from django.shortcuts import redirect, render
+from django.shortcuts import render
+
+from .models import Category, Project
 
 def project_list_view(request):
-    projects = Project.objects.all()
-    query = request.GET.get('name')
-    project_category = request.GET.get('project_category')
-  
+    query = request.GET.get("q", "").strip()
+    project_category = request.GET.get("project_category", "").strip()
+    projects = Project.objects.select_related("category").all()
+
     if query:
-       projects = projects.filter(
-           Q(title__icontains=query) | Q(description__icontains=query)
-       )
-       
+        projects = projects.filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+        )
+
     if project_category:
-       # Yahan 'projects =' lagaya ha takay filter save ho sake
-       projects = projects.filter(
-           Q(category__slug=project_category)
-       )
-       
-    print(query, project_category)
-    return render(request, "projects/projectform.html", {"projects": projects})
+        projects = projects.filter(category__slug=project_category)
+
+    paginator = Paginator(projects, 5)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    pagination_params = request.GET.copy()
+    pagination_params.pop("page", None)
+
+    return render(
+        request,
+        "projects/projectform.html",
+        {
+            "projects": page_obj,
+            "categories": Category.objects.all(),
+            "query": query,
+            "selected_category": project_category,
+            "pagination_query": pagination_params.urlencode(),
+        },
+    )
