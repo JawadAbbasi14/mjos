@@ -6,7 +6,7 @@
 <style>
     .projects-search {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(200px, 0.62fr) auto;
+        grid-template-columns: minmax(0, 1fr) minmax(200px, 0.62fr) auto auto;
         align-items: end;
         gap: 0.85rem;
     }
@@ -54,6 +54,12 @@
         color: var(--text-dim);
         white-space: pre-line;
         line-height: 1.75;
+    }
+
+    .projects-live-url {
+        display: block;
+        margin-top: 0.8rem;
+        overflow-wrap: anywhere;
     }
 
     .projects-category {
@@ -143,15 +149,23 @@
                 </select>
             </div>
             <button class="btn" type="submit">Search</button>
+            <a class="btn btn--ghost" href="{% url 'project_form' %}">Show All</a>
         </form>
     </section>
 
     <section class="projects-results" aria-label="Project results">
         {% for project in projects %}
             <article class="card projects-item">
-                <h2>{{ project.title }}</h2>
+                <h2>
+                    <a href="{% url 'project_detail' slug=project.slug %}">{{ project.title }}</a>
+                </h2>
                 <p>{{ project.description }}</p>
                 <span class="projects-category">{{ project.category.name }}</span>
+                {% if project.live_demo_url %}
+                    <a class="projects-live-url" href="{{ project.live_demo_url }}" target="_blank" rel="noopener noreferrer">
+                        {{ project.live_demo_url }}
+                    </a>
+                {% endif %}
             </article>
         {% empty %}
             <p class="card projects-empty">No projects found.</p>

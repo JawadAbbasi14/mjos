@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from .models import Category, Project
 
@@ -34,3 +34,16 @@ def project_list_view(request):
             "pagination_query": pagination_params.urlencode(),
         },
     )
+
+
+def project_detail(request, slug):
+    project = get_object_or_404(
+        Project.objects.select_related("category"),
+        slug=slug,
+    )
+    return render(
+        request,
+        "projects/projects_detail.html",
+        {"project": project},
+    )
+

@@ -1,0 +1,66 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}{{ project.title }} | Projects | MJOS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .project-detail__description {
+        color: var(--text-dim);
+        line-height: 1.75;
+        white-space: pre-line;
+    }
+
+    .project-detail__content {
+        line-height: 1.8;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+    }
+
+    .project-detail__meta,
+    .project-detail__links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.65rem;
+    }
+
+    .project-detail__meta {
+        margin-top: 1rem;
+        color: var(--text-dim);
+        font-size: 0.85rem;
+    }
+
+    .project-detail__links {
+        margin-top: 1.25rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="portfolio-page">
+    <a class="btn btn--ghost" href="{% url 'project_form' %}">Back to Projects</a>
+
+    <header class="portfolio-page__header">
+        <p class="portfolio-page__eyebrow">{{ project.category.name }}</p>
+        <h1 class="portfolio-page__title">{{ project.title }}</h1>
+        <p class="project-detail__description">{{ project.description }}</p>
+        <div class="project-detail__meta">
+            {% if project.is_featured %}<span>Featured</span>{% endif %}
+            <span>Added {{ project.created_at|date:"F j, Y" }}</span>
+        </div>
+    </header>
+
+    <section class="portfolio-page__section" aria-labelledby="project-details-title">
+        <h2 id="project-details-title">Project Details</h2>
+        <div class="project-detail__content">{{ project.detail_content }}</div>
+        <div class="project-detail__links">
+            {% if project.github_url %}
+                <a class="btn" href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+            {% endif %}
+            {% if project.live_demo_url %}
+                <a class="btn btn--ghost" href="{{ project.live_demo_url }}" target="_blank" rel="noopener noreferrer">Live Demo</a>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

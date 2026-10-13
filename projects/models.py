@@ -19,6 +19,7 @@ class Project(models.Model):
     description = models.TextField()
     github_url = models.URLField(blank=True, null=True)
     live_demo_url = models.URLField(blank=True, null=True)
+    detail_content = models.TextField(blank=False)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
