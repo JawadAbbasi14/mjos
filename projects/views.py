@@ -25,7 +25,7 @@ def project_list_view(request):
 
     return render(
         request,
-        "projects/projectform.html",
+        "projects/projects.html",
         {
             "projects": page_obj,
             "categories": Category.objects.all(),

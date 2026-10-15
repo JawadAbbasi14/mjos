@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'portfolio.apps.PortfolioConfig',
     'projects.apps.ProjectsConfig',
+    'db_lab.apps.DbLabConfig'
 ]
 
 MIDDLEWARE = [
