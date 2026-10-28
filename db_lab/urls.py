@@ -9,5 +9,9 @@ from . import views
 
 # Routing configurations mapped out for clean multi-database entry points
 urlpatterns = [
-    path('',views.database_start,name="start_db")
+    path('',views.read_products,name="db_home"),
+    path("create", views.create_product, name="create"),
+    path("delete", views.delete_product, name="delete"),
+    path("update", views.update_product, name="update")
+
 ]

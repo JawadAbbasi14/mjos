@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MJOS-Database</title>
+    <style>
+    /* 1995 Vintage Theme Styling */
+    body {
+        background-color: #c0c0c0; /* Windows 95 classic gray background */
+        font-family: "Times New Roman", Times, serif;
+        color: #000000;
+        margin: 20px;
+    }
+
+    h1 {
+        color: #000080; /* Navy Blue header - classic windows title bar color */
+        border-bottom: 2px solid #808080;
+        padding-bottom: 5px;
+    }
+
+    /* Solid Action Link styled like an old-school button */
+    a {
+        display: inline-block;
+        background-color: #dcdcdc;
+        color: #000000;
+        padding: 5px 10px;
+        text-decoration: none;
+        border-top: 2px solid #ffffff;
+        border-left: 2px solid #ffffff;
+        border-right: 2px solid #808080;
+        border-bottom: 2px solid #808080;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    a:active {
+        border-top: 2px solid #808080;
+        border-left: 2px solid #808080;
+        border-right: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
+    }
+
+    /* Grid Table with proper old school borders */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background-color: #ffffff;
+        border: 3px double #000000; /* Double line border for vintage look */
+    }
+
+    th {
+        background-color: #808080;
+        color: #ffffff;
+        text-align: left;
+        padding: 8px;
+        font-weight: bold;
+        border: 1px solid #000000;
+    }
+
+    td {
+        padding: 8px;
+        border: 1px solid #808080;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f0f0f0; /* Alternating row colors */
+    }
+</style>
+
+</head>
+<body>
+    <h1>Welcome to MJOS LAB!</h1>
+    <br><br>
+    <a href="{%url 'create'%}">Add Product</a>
+<br><br>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Description</th>
+                <th>Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+    <!-- Loop shuru ho raha hai -->
+    {% for p in products %}
+    <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.price }}</td>
+        <td>{{ p.quantity }}</td>
+        <td>{{ p.description }}</td>
+        <td>{{ p.updated_at }}</td>
+    </tr>
+    
+    <!-- Agar database mein koi product nahi hoga (Khali hoga), to yeh chalega -->
+    {% empty %}
+    <tr>
+        <td colspan="3" style="text-align: center;"><h2>Database is Empty!</h2></td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+    </table>
+    
+  
+
+
+
+
+</body>
+</html>
