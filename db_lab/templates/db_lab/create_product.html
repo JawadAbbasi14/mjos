@@ -1,97 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MJOS | db - create-product</title>
-    <style>
-    /* 1995 Vintage Theme Form Styling */
-    body {
-        background-color: #c0c0c0;
-        font-family: "Times New Roman", Times, serif;
-        color: #000000;
-        margin: 20px;
-    }
+{% extends "db_lab/app_base.html" %}
+{% block title %}Add Product | Database Lab{% endblock %}
+{% block content %}
+<section class="database-page">
+    <header class="database-page__header">
+        <div>
+            <p class="portfolio-page__eyebrow">Database Lab / New Record</p>
+            <h1>Add a product</h1>
+            <p>Enter the product details to create a database record.</p>
+        </div>
+        <a class="btn btn--ghost" href="{% url 'db_home' %}">Product list</a>
+    </header>
 
-    h2 {
-        color: #000080;
-    }
-
-    /* Navigation Link styled like an old-school button */
-    a {
-        display: inline-block;
-        background-color: #dcdcdc;
-        color: #000000;
-        padding: 4px 8px;
-        text-decoration: none;
-        border-top: 2px solid #ffffff;
-        border-left: 2px solid #ffffff;
-        border-right: 2px solid #808080;
-        border-bottom: 2px solid #808080;
-        margin-bottom: 20px;
-    }
-
-    /* Form Layout - Vertical stack for fields */
-    form {
-        background-color: #dcdcdc;
-        padding: 20px;
-        border-top: 2px solid #ffffff;
-        border-left: 2px solid #ffffff;
-        border-right: 2px solid #808080;
-        border-bottom: 2px solid #808080;
-        max-width: 400px;
-    }
-
-    /* Making inputs block level so they stack nicely */
-    input {
-        display: block;
-        width: 90%;
-        margin-bottom: 12px;
-        padding: 6px;
-        font-family: Arial, sans-serif; /* 90s inputs used system sans-serif */
-        background-color: #ffffff;
-        border-top: 2px solid #808080;
-        border-left: 2px solid #808080;
-        border-right: 2px solid #ffffff;
-        border-bottom: 2px solid #ffffff; /* Inverted borders for inset 3D effect */
-    }
-
-    /* Classic 3D Bevel Button */
-    button {
-        display: block;
-        padding: 6px 15px;
-        background-color: #c0c0c0;
-        font-weight: bold;
-        cursor: pointer;
-        border-top: 2px solid #ffffff;
-        border-left: 2px solid #ffffff;
-        border-right: 2px solid #808080;
-        border-bottom: 2px solid #808080;
-    }
-
-    button:active {
-        border-top: 2px solid #808080;
-        border-left: 2px solid #808080;
-        border-right: 2px solid #ffffff;
-        border-bottom: 2px solid #ffffff;
-    }
-</style>
-
-</head>
-<body>
-<h2>Hare you can create/add product </h2>
-<a href="{%url 'db_home'%}">Product Table</a>
-
-<form action="{%url 'create'%}" method="post">
-    {% csrf_token %}
-    <input type="text" name=pname placeholder="Enter your product name">
-    <input type="number" name=pprice placeholder="Enter price">
-    <input type="number" name=pquantity placeholder="Enter quantity">
-    <input type="text" name=pdescription placeholder="Description">
-
-    <button type="submit">Add Now</button>
-    
-</form>
-
-</body>
+    <form class="db-form" action="{% url 'create' %}" method="post">
+        {% csrf_token %}
+        {% if request.method == 'POST' %}
+            <p class="db-errors" role="alert">Name, price, and quantity are required.</p>
+        {% endif %}
+        <div class="db-field">
+            <label for="pname">Product name</label>
+            <input id="pname" type="text" name="pname" maxlength="50" required autocomplete="off">
+        </div>
+        <div class="db-field">
+            <label for="pprice">Price</label>
+            <input id="pprice" type="number" name="pprice" min="0" step="0.01" required>
+        </div>
+        <div class="db-field">
+            <label for="pquantity">Quantity</label>
+            <input id="pquantity" type="number" name="pquantity" min="0" step="1" required>
+        </div>
+        <div class="db-field">
+            <label for="pdescription">Description</label>
+            <textarea id="pdescription" name="pdescription" maxlength="1000"></textarea>
+        </div>
+        <div class="db-form__actions">
+            <button class="btn" type="submit">Add product</button>
+            <a class="btn btn--ghost" href="{% url 'db_home' %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
 </html>

@@ -1,11 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MJOS | db - update-product</title>
-</head>
-<body>
-    <h1>Update your product hare!</h1>
-</body>
+{% extends "db_lab/app_base.html" %}
+{% block title %}Update Product | Database Lab{% endblock %}
+{% block content %}
+<section class="database-page">
+    <header class="database-page__header">
+        <div>
+            <p class="portfolio-page__eyebrow">Database Lab / Edit Record</p>
+            <h1>Update product</h1>
+            <p>Editing {{ product.name }}.</p>
+        </div>
+        <a class="btn btn--ghost" href="{% url 'db_home' %}">Product list</a>
+    </header>
+
+    <form class="db-form" action="{% url 'update' product.id %}" method="post">
+        {% csrf_token %}
+        <div class="db-field">
+            <label for="pname">Product name</label>
+            <input id="pname" type="text" name="pname" maxlength="50" value="{{ product.name }}" required>
+        </div>
+        <div class="db-field">
+            <label for="pprice">Price</label>
+            <input id="pprice" type="number" name="pprice" min="0" step="0.01" value="{{ product.price }}" required>
+        </div>
+        <div class="db-field">
+            <label for="pquantity">Quantity</label>
+            <input id="pquantity" type="number" name="pquantity" min="0" step="1" value="{{ product.quantity }}" required>
+        </div>
+        <div class="db-field">
+            <label for="pdescription">Description</label>
+            <textarea id="pdescription" name="pdescription" maxlength="1000">{{ product.description }}</textarea>
+        </div>
+        <div class="db-form__actions">
+            <button class="btn" type="submit">Save changes</button>
+            <a class="btn btn--ghost" href="{% url 'db_home' %}">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
 </html>

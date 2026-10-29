@@ -11,7 +11,8 @@ from . import views
 urlpatterns = [
     path('',views.read_products,name="db_home"),
     path("create", views.create_product, name="create"),
-    path("delete", views.delete_product, name="delete"),
-    path("update", views.update_product, name="update")
+    path('delete/<int:product_id>/', views.delete_product, name="delete"),
+    path('update/<int:product_id>/', views.update_product, name="update")
+    
 
 ]

@@ -1,4 +1,4 @@
-{% extends "portfolio/base.html" %}
+{% extends "portfolio/app_base.html" %}
 
 {% block title %}MJOS | MJ — Independent Cybersecurity Specialist & Developer{% endblock %}
 
@@ -11,14 +11,14 @@
        ========================================================= */
 
     .portfolio-home {
-        --home-accent: #47ff88;
-        --home-accent-soft: rgba(71, 255, 136, 0.12);
-        --home-blue: #70b7ff;
-        --home-blue-soft: rgba(112, 183, 255, 0.10);
-        --home-border: rgba(255, 255, 255, 0.09);
-        --home-panel: rgba(255, 255, 255, 0.025);
-        --home-panel-strong: rgba(255, 255, 255, 0.045);
-        --home-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+        --home-accent: var(--gold);
+        --home-accent-soft: var(--warn-bg);
+        --home-blue: var(--oxblood);
+        --home-blue-soft: var(--glow-strong);
+        --home-border: var(--rule);
+        --home-panel: var(--surface);
+        --home-panel-strong: var(--surface-2);
+        --home-shadow: 0 18px 34px rgba(35, 28, 21, 0.1);
     }
 
     /* =========================
@@ -37,10 +37,10 @@
         inset: 0;
         z-index: -2;
         pointer-events: none;
-        opacity: 0.28;
+        opacity: 0.12;
         background-image:
-            linear-gradient(rgba(71, 255, 136, 0.035) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(71, 255, 136, 0.035) 1px, transparent 1px);
+            linear-gradient(color-mix(in srgb, var(--rule) 16%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in srgb, var(--rule) 16%, transparent) 1px, transparent 1px);
         background-size: 44px 44px;
         mask-image: linear-gradient(to bottom, black, transparent 78%);
     }
@@ -56,7 +56,7 @@
         border-radius: 50%;
         background: radial-gradient(
             circle,
-            rgba(71, 255, 136, 0.10),
+            var(--glow),
             transparent 68%
         );
         pointer-events: none;
@@ -116,7 +116,9 @@
 
     .section-heading h2 {
         margin: 0;
-        font-size: clamp(1.55rem, 3vw, 2.2rem);
+        font-family: var(--serif);
+        font-size: 2.2rem;
+        font-weight: 400;
         line-height: 1.08;
     }
 
@@ -172,23 +174,25 @@
 
     .hero h1 {
         margin: 0;
-        font-size: clamp(4.5rem, 13vw, 9rem);
-        line-height: 0.84;
-        letter-spacing: -0.07em;
-        font-weight: 800;
+        font-family: var(--serif);
+        font-size: 9rem;
+        line-height: 0.95;
+        letter-spacing: 0;
+        font-weight: 400;
     }
 
     .hero__title {
         margin: 1.4rem 0 1rem;
-        font-size: clamp(1.25rem, 3vw, 1.8rem);
+        font-family: var(--serif);
+        font-size: 1.8rem;
         line-height: 1.2;
-        font-weight: 700;
+        font-weight: 400;
     }
 
     .hero__statement {
         max-width: 58ch;
         margin: 0 0 1rem;
-        font-size: clamp(1rem, 2vw, 1.12rem);
+        font-size: 1.12rem;
         line-height: 1.8;
     }
 
@@ -217,8 +221,8 @@
         background:
             linear-gradient(
                 180deg,
-                rgba(71, 255, 136, 0.04),
-                rgba(255, 255, 255, 0.015)
+                color-mix(in srgb, var(--home-accent) 4%, transparent),
+                color-mix(in srgb, var(--home-panel) 92%, transparent)
             );
         box-shadow: var(--home-shadow);
         backdrop-filter: blur(12px);
@@ -228,7 +232,7 @@
         content: "";
         position: absolute;
         inset: 1px;
-        border: 1px solid rgba(71, 255, 136, 0.04);
+        border: 1px solid color-mix(in srgb, var(--home-accent) 4%, transparent);
         border-radius: 16px;
         pointer-events: none;
     }
@@ -306,8 +310,8 @@
         background:
             linear-gradient(
                 105deg,
-                rgba(71, 255, 136, 0.06),
-                rgba(255, 255, 255, 0.018)
+                color-mix(in srgb, var(--home-accent) 8%, transparent),
+                color-mix(in srgb, var(--home-panel) 94%, transparent)
             );
         box-shadow: var(--home-shadow);
     }
@@ -317,16 +321,18 @@
         position: absolute;
         right: 1.3rem;
         bottom: 0.8rem;
-        color: rgba(255,255,255,0.03);
+        color: color-mix(in srgb, var(--ink) 4%, transparent);
         font-size: 5rem;
         font-weight: 800;
-        letter-spacing: -0.07em;
+        letter-spacing: 0;
         pointer-events: none;
     }
 
     .operational-card h3 {
         margin: 0 0 0.75rem;
-        font-size: clamp(1.4rem, 3vw, 2rem);
+        font-family: var(--serif);
+        font-size: 2rem;
+        font-weight: 400;
     }
 
     .operational-card p {
@@ -371,12 +377,12 @@
 
     .focus-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(71, 255, 136, 0.35);
+        border-color: var(--home-accent);
         box-shadow: 0 20px 55px rgba(0,0,0,0.25);
     }
 
     .focus-card__number {
-        color: rgba(71,255,136,0.4);
+        color: color-mix(in srgb, var(--home-accent) 58%, var(--ink-3));
         font-size: 0.7rem;
         font-weight: 700;
         letter-spacing: 0.12em;
@@ -384,7 +390,9 @@
 
     .focus-card h3 {
         margin: 2.6rem 0 0.8rem;
+        font-family: var(--serif);
         font-size: 1.15rem;
+        font-weight: 400;
         line-height: 1.3;
     }
 
@@ -461,7 +469,7 @@
         flex: 0 0 auto;
         border-radius: 50%;
         background: var(--home-accent);
-        box-shadow: 0 0 10px rgba(71,255,136,0.5);
+        box-shadow: 0 0 10px var(--home-accent-soft);
     }
 
     /* =========================
@@ -545,12 +553,12 @@
         position: relative;
         padding: 2rem;
         overflow: hidden;
-        border: 1px solid rgba(71,255,136,0.2);
+        border: 1px solid var(--home-border);
         border-radius: 20px;
         background:
             radial-gradient(
                 circle at top right,
-                rgba(71,255,136,0.08),
+                var(--home-accent-soft),
                 transparent 42%
             ),
             var(--home-panel-strong);
@@ -569,7 +577,7 @@
     .vision-card > p {
         max-width: 78ch;
         margin: 0;
-        font-size: clamp(1rem, 2vw, 1.12rem);
+        font-size: 1.12rem;
         line-height: 1.85;
     }
 
@@ -632,7 +640,7 @@
 
     .app-card:hover {
         transform: translateY(-3px);
-        border-color: rgba(71,255,136,0.3);
+        border-color: var(--home-accent);
         background: var(--home-panel-strong);
     }
 
@@ -660,7 +668,9 @@
 
     .app-card h3 {
         margin: 0 0 0.45rem;
-        font-size: 1rem;
+        font-family: var(--serif);
+        font-size: 1.3rem;
+        font-weight: 400;
     }
 
     .app-card p {
@@ -691,12 +701,12 @@
         padding: clamp(2rem, 5vw, 4rem);
         text-align: center;
         overflow: hidden;
-        border: 1px solid rgba(71,255,136,0.2);
+        border: 1px solid var(--home-border);
         border-radius: 24px;
         background:
             radial-gradient(
                 circle at center,
-                rgba(71,255,136,0.08),
+                var(--home-accent-soft),
                 transparent 55%
             ),
             var(--home-panel-strong);
@@ -715,7 +725,9 @@
     .final-card h2 {
         margin: 0 auto 0.8rem;
         max-width: 18ch;
-        font-size: clamp(2rem, 5vw, 3.4rem);
+        font-family: var(--serif);
+        font-size: 3.4rem;
+        font-weight: 400;
         line-height: 1.05;
     }
 
@@ -738,27 +750,27 @@
        ========================= */
 
     [data-theme="light"] .portfolio-home {
-        --home-accent: #4f46e5;
-        --home-accent-soft: rgba(79, 70, 229, 0.08);
-        --home-blue: #2563eb;
-        --home-blue-soft: rgba(37, 99, 235, 0.08);
-        --home-border: #e2e8f0;
-        --home-panel: #ffffff;
-        --home-panel-strong: #ffffff;
-        --home-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+        --home-accent: var(--gold);
+        --home-accent-soft: var(--warn-bg);
+        --home-blue: var(--oxblood);
+        --home-blue-soft: var(--glow-strong);
+        --home-border: var(--rule);
+        --home-panel: var(--surface);
+        --home-panel-strong: var(--surface-2);
+        --home-shadow: 0 18px 34px rgba(35, 28, 21, 0.1);
     }
 
     [data-theme="light"] .portfolio-home::before {
-        opacity: 0.35;
+        opacity: 0.12;
         background-image:
-            linear-gradient(rgba(15, 23, 42, 0.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(15, 23, 42, 0.025) 1px, transparent 1px);
+            linear-gradient(color-mix(in srgb, var(--rule) 16%, transparent) 1px, transparent 1px),
+            linear-gradient(90deg, color-mix(in srgb, var(--rule) 16%, transparent) 1px, transparent 1px);
     }
 
     [data-theme="light"] .portfolio-home::after {
         background: radial-gradient(
             circle,
-            rgba(79,70,229,0.08),
+            var(--glow),
             transparent 68%
         );
     }
@@ -769,15 +781,32 @@
     [data-theme="light"] .final-card {
         background: linear-gradient(
             145deg,
-            #ffffff,
-            #f8fafc
+            var(--surface),
+            var(--paper-2)
         );
     }
 
     [data-theme="light"] .focus-card:hover,
     [data-theme="light"] .app-card:hover {
-        border-color: rgba(79,70,229,0.30);
-        box-shadow: 0 16px 35px rgba(15,23,42,0.08);
+        border-color: var(--gold);
+        box-shadow: var(--home-shadow);
+    }
+
+    .portfolio-home::after {
+        display: none;
+    }
+
+    .portfolio-home .hero__eyebrow,
+    .portfolio-home .hero-node,
+    .portfolio-home .operational-card,
+    .portfolio-home .focus-card,
+    .portfolio-home .skills-matrix,
+    .portfolio-home .info-card,
+    .portfolio-home .vision-card,
+    .portfolio-home .vision-meta__item,
+    .portfolio-home .app-card,
+    .portfolio-home .final-card {
+        border-radius: 2px;
     }
 
     /* =========================
@@ -840,7 +869,7 @@
         }
 
         .hero h1 {
-            font-size: clamp(4rem, 25vw, 7rem);
+            font-size: 5rem;
         }
     }
 
@@ -851,6 +880,10 @@
 
         .hero {
             padding: 2rem 0 4rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
         }
 
         .hero__actions,
@@ -908,19 +941,19 @@
                 <h1>MJ</h1>
 
                 <p class="hero__title">
-                    Independent Cybersecurity Specialist &amp; Developer
+                        Independent Cybersecurity Specialist & Developer
                 </p>
 
                 <p class="hero__statement">
-                    Building secure code, mastering financial markets,
-                    and scaling digital businesses. Fueled by Python,
-                    Rust, and strategic trade.
+                        Independent development across software, cybersecurity,
+                        and technical systems, with Python and Rust among the
+                        stated areas of focus.
                 </p>
 
                 <p class="hero__intro">
-                    The independent cyber warrior / Developer.
-                    Operating at the intersection of offensive security,
-                    performance engineering, and digital entrepreneurship.
+                        A concise overview of current work and learning. Dedicated
+                        pages contain the portfolio, education, experience, and
+                        project details.
                 </p>
 
                 <div class="hero__actions">
@@ -936,49 +969,29 @@
             </div>
 
 
-            <!-- HERO STATUS NODE -->
-
-            <aside class="hero-node" aria-label="MJ profile status">
-
-                <div class="node-header">
-                    <span class="node-header__label">
-                        Identity Node
-                    </span>
-
-                    <span class="node-header__state">
-                        ONLINE
-                    </span>
+            <aside class="hero-node mjos-plate" aria-label="Engraved MJOS system mark">
+                <div class="mjos-plate__frame">
+                    <div class="mjos-plate__inner">
+                        <svg class="mjos-plate__art" viewBox="0 0 420 520" role="img" aria-labelledby="plate-title">
+                            <title id="plate-title">Engraved MJOS monogram and system mark</title>
+                            <g fill="none" stroke="#231c15" stroke-width="1">
+                                <rect x="9" y="9" width="402" height="502" />
+                                <rect x="20" y="20" width="380" height="480" stroke-width="0.6" opacity="0.5" />
+                            </g>
+                            <circle cx="210" cy="120" r="22" fill="none" stroke="#9a7c43" stroke-width="1" />
+                            <circle cx="210" cy="120" r="39" fill="none" stroke="#9a7c43" stroke-width="14" stroke-dasharray="1.6 13.71" />
+                            <path d="M122 428V268a88 88 0 0 1 176 0v160" fill="none" stroke="#231c15" stroke-width="1.2" />
+                            <path d="M134 428V272a76 76 0 0 1 152 0v156" fill="none" stroke="#231c15" stroke-width="0.6" opacity="0.55" />
+                            <text x="210" y="352" text-anchor="middle" fill="#231c15" font-family="Cormorant Garamond, Georgia, serif" font-size="128">M</text>
+                            <line x1="96" y1="428" x2="324" y2="428" stroke="#231c15" stroke-width="1.2" />
+                            <line x1="96" y1="420" x2="96" y2="436" stroke="#231c15" />
+                            <line x1="324" y1="420" x2="324" y2="436" stroke="#231c15" />
+                            <text x="210" y="474" text-anchor="middle" fill="#7a6a56" font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="5">SYS.V1.0</text>
+                        </svg>
+                    </div>
                 </div>
-
-                <div class="node-body">
-
-                    <div class="node-row">
-                        <span>Alias</span>
-                        <span class="node-accent">MJ</span>
-                    </div>
-
-                    <div class="node-row">
-                        <span>Domain</span>
-                        <span>Security / Development</span>
-                    </div>
-
-                    <div class="node-row">
-                        <span>Primary Stack</span>
-                        <span>Python / Rust</span>
-                    </div>
-
-                    <div class="node-row">
-                        <span>Mode</span>
-                        <span>Independent</span>
-                    </div>
-
-                    <div class="node-row">
-                        <span>Interface</span>
-                        <span class="node-accent">MJOS</span>
-                    </div>
-
-                </div>
-
+                <div class="mjos-plate__seal" aria-hidden="true"><span>MJOS</span><small>Independent</small></div>
+                <p class="mjos-plate__caption">Plate I <span aria-hidden="true">/</span> Systems mark</p>
             </aside>
 
         </div>
@@ -1142,261 +1155,6 @@
 
 
     <!-- =====================================================
-         SKILLS
-         ===================================================== -->
-    <section
-        class="home-section"
-        aria-labelledby="skills-title"
-    >
-        <div class="home-shell">
-
-            <div class="section-heading">
-
-                <div class="section-heading__left">
-                    <span class="section-index">03</span>
-
-                    <div>
-                        <p class="section-kicker">
-                            Technology
-                        </p>
-
-                        <h2 id="skills-title">
-                            Technical Stack
-                        </h2>
-                    </div>
-                </div>
-
-                <p>
-                    A concise public snapshot.
-                </p>
-
-            </div>
-
-
-            <div class="skills-layout">
-
-                <div class="skills-intro">
-
-                    <h3>
-                        Core capabilities
-                    </h3>
-
-                    <p>
-                        A brief development snapshot. See the Experience page
-                        for project-based context.
-                    </p>
-
-                </div>
-
-
-                <div class="skills-matrix">
-
-                    <ul class="skill-list">
-
-                        <li class="skill-item">
-                            <span class="skill-dot"></span>
-                            Python
-                        </li>
-
-                        <li class="skill-item">
-                            <span class="skill-dot"></span>
-                            Rust
-                        </li>
-
-                        <li class="skill-item">
-                            <span class="skill-dot"></span>
-                            JavaScript
-                        </li>
-
-                        <li class="skill-item">
-                            <span class="skill-dot"></span>
-                            Django
-                        </li>
-
-                    </ul>
-
-                    <a class="app-card__arrow" href="{% url 'experience' %}">
-                        View development experience →
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-    </section>
-
-
-    <!-- =====================================================
-         EDUCATION + GROWTH
-         ===================================================== -->
-    <section
-        class="home-section"
-        aria-labelledby="development-title"
-    >
-        <div class="home-shell">
-
-            <div class="section-heading">
-
-                <div class="section-heading__left">
-                    <span class="section-index">04</span>
-
-                    <div>
-                        <p class="section-kicker">
-                            Development
-                        </p>
-
-                        <h2 id="development-title">
-                            Learning &amp; Growth
-                        </h2>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <div class="dual-grid">
-
-                <article class="info-card">
-
-                    <div class="info-card__top">
-                        <span class="info-card__tag">
-                            Education
-                        </span>
-
-                        <span class="info-card__symbol">
-                            ◈
-                        </span>
-                    </div>
-
-                    <h3>
-                        Education and learning background
-                    </h3>
-
-                    <p>
-                        Formal education and self-directed learning are
-                        described on the dedicated Education page.
-                    </p>
-
-                    <a class="app-card__arrow" href="{% url 'education' %}">
-                        View Education →
-                    </a>
-
-                </article>
-
-
-                <article class="info-card">
-
-                    <div class="info-card__top">
-                        <span class="info-card__tag">
-                            Credentials
-                        </span>
-
-                        <span class="info-card__symbol">
-                            ↗
-                        </span>
-                    </div>
-
-                    <h3>
-                        Certificates and courses
-                    </h3>
-
-                    <p>Confirmed credentials are listed on the dedicated page.</p>
-
-                    <a class="app-card__arrow" href="{% url 'certifications' %}">
-                        View Certifications →
-                    </a>
-
-                </article>
-
-            </div>
-
-        </div>
-    </section>
-
-
-    <!-- =====================================================
-         MJOS VISION
-         ===================================================== -->
-    <section
-        class="home-section"
-        aria-labelledby="vision-title"
-    >
-        <div class="home-shell">
-
-            <div class="section-heading">
-
-                <div class="section-heading__left">
-                    <span class="section-index">05</span>
-
-                    <div>
-                        <p class="section-kicker">
-                            Platform vision
-                        </p>
-
-                        <h2 id="vision-title">
-                            MJOS
-                        </h2>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <div class="vision-card">
-
-                <p class="vision-card__code">
-                    SYSTEM / MJOS / VISION
-                </p>
-
-                <p>
-                    MJOS is a custom-engineered web ecosystem and
-                    terminal interface built to serve as a private
-                    command center for engineering, deployment, and testing.
-                </p>
-
-
-                <div class="vision-meta">
-
-                    <div class="vision-meta__item">
-
-                        <span class="vision-meta__label">
-                            Purpose
-                        </span>
-
-                        <span class="vision-meta__text">
-                            To establish a sovereign digital hub that
-                            integrates technical security projects,
-                            operational workflows, and private
-                            entrepreneurial frameworks.
-                        </span>
-
-                    </div>
-
-
-                    <div class="vision-meta__item">
-
-                        <span class="vision-meta__label">
-                            Provides
-                        </span>
-
-                        <span class="vision-meta__text">
-                            Operational Roadmaps, Tool Previews,
-                            and Developer Insights via distinct
-                            application sections.
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-    </section>
-
-
-    <!-- =====================================================
          APPLICATION DIRECTORY
          ===================================================== -->
     <section
@@ -1409,21 +1167,21 @@
             <div class="section-heading">
 
                 <div class="section-heading__left">
-                    <span class="section-index">06</span>
+                    <span class="section-index">03</span>
 
                     <div>
                         <p class="section-kicker">
-                            Navigation layer
+                            Portfolio navigation
                         </p>
 
                         <h2 id="directory-title">
-                            Application Directory
+                            Portfolio Pages
                         </h2>
                     </div>
                 </div>
 
                 <p>
-                    Each domain lives behind its own module.
+                    Open a dedicated Portfolio page.
                 </p>
 
             </div>
@@ -1461,36 +1219,6 @@
 
                 <a
                     class="app-card"
-                    href="https://github.com/JawadAbbasi14?tab=repositories"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <div class="app-card__top">
-                        <span class="app-card__index">
-                            NODE / 02
-                        </span>
-
-                        <span class="app-card__state">
-                            GitHub
-                        </span>
-                    </div>
-
-                    <h3>
-                        Projects
-                    </h3>
-
-                    <p>
-                        Dedicated project system.
-                    </p>
-
-                    <span class="app-card__arrow">
-                        Open node →
-                    </span>
-                </a>
-
-
-                <a
-                    class="app-card"
                     href="{% url 'education' %}"
                 >
                     <div class="app-card__top">
@@ -1517,129 +1245,33 @@
                 </a>
 
 
-                <div class="app-card">
-                    <div class="app-card__top">
-                        <span class="app-card__index">
-                            NODE / 04
-                        </span>
+                <a class="app-card" href="{% url 'experience' %}">
+                    <div class="app-card__top"><span class="app-card__index">NODE / 04</span><span class="app-card__state">Available</span></div>
+                    <h3>Experience</h3>
+                    <p>Independent development and project-based work.</p>
+                    <span class="app-card__arrow">Open page →</span>
+                </a>
 
-                        <span class="app-card__state">
-                            Planned
-                        </span>
-                    </div>
+                <a class="app-card" href="{% url 'certifications' %}">
+                    <div class="app-card__top"><span class="app-card__index">NODE / 05</span><span class="app-card__state">Available</span></div>
+                    <h3>Certifications</h3>
+                    <p>Confirmed certificates and courses.</p>
+                    <span class="app-card__arrow">Open page →</span>
+                </a>
 
-                    <h3>
-                        Trading
-                    </h3>
+                <a class="app-card" href="{% url 'services' %}">
+                    <div class="app-card__top"><span class="app-card__index">NODE / 06</span><span class="app-card__state">Available</span></div>
+                    <h3>Services</h3>
+                    <p>Development services represented in this portfolio.</p>
+                    <span class="app-card__arrow">Open page →</span>
+                </a>
 
-                    <p>
-                        Market framework and analysis domain.
-                    </p>
-
-                    <span class="app-card__arrow">
-                        Module pending
-                    </span>
-                </div>
-
-
-                <div class="app-card">
-                    <div class="app-card__top">
-                        <span class="app-card__index">
-                            NODE / 05
-                        </span>
-
-                        <span class="app-card__state">
-                            Planned
-                        </span>
-                    </div>
-
-                    <h3>
-                        Skills
-                    </h3>
-
-                    <p>
-                        Full technical skills index.
-                    </p>
-
-                    <span class="app-card__arrow">
-                        Module pending
-                    </span>
-                </div>
-
-
-                <div class="app-card">
-                    <div class="app-card__top">
-                        <span class="app-card__index">
-                            NODE / 06
-                        </span>
-
-                        <span class="app-card__state">
-                            Planned
-                        </span>
-                    </div>
-
-                    <h3>
-                        Roadmaps
-                    </h3>
-
-                    <p>
-                        Structured learning and operational roadmaps.
-                    </p>
-
-                    <span class="app-card__arrow">
-                        Module pending
-                    </span>
-                </div>
-
-
-                <div class="app-card">
-                    <div class="app-card__top">
-                        <span class="app-card__index">
-                            NODE / 07
-                        </span>
-
-                        <span class="app-card__state">
-                            Planned
-                        </span>
-                    </div>
-
-                    <h3>
-                        Blog
-                    </h3>
-
-                    <p>
-                        Developer insights and technical writing.
-                    </p>
-
-                    <span class="app-card__arrow">
-                        Module pending
-                    </span>
-                </div>
-
-
-                <div class="app-card">
-                    <div class="app-card__top">
-                        <span class="app-card__index">
-                            NODE / 08
-                        </span>
-
-                        <span class="app-card__state">
-                            Planned
-                        </span>
-                    </div>
-
-                    <h3>
-                        Contact
-                    </h3>
-
-                    <p>
-                        Unified identity and contact entry point.
-                    </p>
-
-                    <span class="app-card__arrow">
-                        Module pending
-                    </span>
-                </div>
+                <a class="app-card" href="{% url 'cv' %}">
+                    <div class="app-card__top"><span class="app-card__index">NODE / 07</span><span class="app-card__state">Available</span></div>
+                    <h3>Curriculum Vitae</h3>
+                    <p>Experience, technical profile, and credentials.</p>
+                    <span class="app-card__arrow">Open page →</span>
+                </a>
 
             </div>
 
@@ -1665,7 +1297,8 @@
 
                 <p>
                     The portfolio is the overview.
-                    The actual domains live inside dedicated MJOS modules.
+                    Explore the existing portfolio, project, account, and
+                    Database Lab pages.
                 </p>
 
                 <div class="final-actions">

@@ -6,7 +6,7 @@ from django.urls import reverse
 class PortfolioAccessTests(TestCase):
     def test_public_pages_are_available_without_login(self):
         page_names = (
-            "home",
+            "portfolio_home",
             "about",
             "education",
             "certifications",
@@ -35,3 +35,29 @@ class PortfolioAccessTests(TestCase):
         self.assertContains(authenticated_home, reverse("dashboard"))
         self.assertContains(authenticated_home, reverse("logout"))
         self.assertNotContains(authenticated_home, reverse("signup"))
+
+    def test_global_home_lists_only_registered_application_landing_pages(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, reverse("portfolio_home"))
+        self.assertContains(response, reverse("project_form"))
+        self.assertContains(response, reverse("db_home"))
+        self.assertNotContains(response, reverse("education"))
+        self.assertNotContains(response, reverse("cv"))
+
+    def test_portfolio_navigation_owns_its_internal_pages(self):
+        response = self.client.get(reverse("portfolio_home"))
+        navigation = response.content.decode().split('<nav class="site-nav"', 1)[1].split("</nav>", 1)[0]
+
+        for name in ("about", "education", "experience", "certifications", "services", "cv"):
+            with self.subTest(page=name):
+                self.assertIn(reverse(name), navigation)
+
+        self.assertNotIn(reverse("project_form"), navigation)
+        self.assertNotIn(reverse("db_home"), navigation)
+
+    def test_legacy_portfolio_path_redirects_to_portfolio_application(self):
+        response = self.client.get("/about/")
+
+        self.assertRedirects(response, reverse("about"))

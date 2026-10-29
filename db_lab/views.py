@@ -3,36 +3,41 @@ from django.http import HttpResponse
 from .models import Product
 
 def read_products(request):
-    product = Product.objects.all()
-    return render(request, 'db_lab/db_product_table.html', {"products": product})
+    products = Product.objects.all()
+    return render(request, 'db_lab/db_product_table.html', {"products": products})
 
-#create products
 def create_product(request): 
     if request.method == "POST":
         p_name = request.POST.get('pname')
         p_price = request.POST.get('pprice')
         p_quantity = request.POST.get('pquantity')
         p_description = request.POST.get('pdescription')
-    
-        print("Saari values aa gy. Product banio!",{p_name})
-                                    
+        
         if p_name and p_price and p_quantity:
-        # .create() khud hi database mein save kar deta hai
-            new_product = Product.objects.create(name=p_name, price=p_price, quantity=p_quantity,description=p_description)
-            print("Product successfully saved!")
-        
-    return render(request,'db_lab/create_product.html')
+            Product.objects.create(
+                name=p_name, 
+                price=p_price, 
+                quantity=p_quantity, 
+                description=p_description
+            )
+            return redirect('db_home')  # ✅ Create ke baad redirect karo
+            
+    return render(request, 'db_lab/create_product.html')
 
-                   
+def update_product(request, product_id):
+    product = Product.objects.get(id=product_id)
 
-        
+    if request.method == "POST":
+        product.name = request.POST.get('pname')
+        product.price = request.POST.get('pprice')
+        product.quantity = request.POST.get('pquantity')
+        product.description = request.POST.get('pdescription')
+        product.save()
+        return redirect('db_home')
 
-#update Product
-def update_product(request):
-    return render(request,'db_lab/update_product.html')
+    return render(request, 'db_lab/update_product.html', {'product': product})
 
-
-#Delete Products
-def delete_product(request):
-    return render(request,'db_lab/delete_product.html')
-
+def delete_product(request, product_id):
+    product = Product.objects.get(id=product_id)  # ✅ URL se mila hua ID use karo
+    product.delete()
+    return redirect('db_home')  # ✅ Redirect karo, render nahi

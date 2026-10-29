@@ -1,0 +1,30 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}MJOS | Applications{% endblock %}
+
+{% block content %}
+<section class="platform-hero">
+    <div class="wrap platform-hero__inner">
+        <p class="portfolio-page__eyebrow">Independent Practice / MJOS</p>
+        <h1>A place for considered <em>software.</em></h1>
+        <p>MJOS brings distinct areas of development and practice into one platform. Choose an application to continue.</p>
+    </div>
+</section>
+
+<section class="wrap platform-modules" aria-labelledby="modules-heading">
+    <header class="platform-modules__heading">
+        <p class="portfolio-page__eyebrow">Application index</p>
+        <h2 id="modules-heading">Explore MJOS</h2>
+    </header>
+    <div class="module-grid">
+        {% for module in application_modules %}
+            <a class="module-card" href="{{ module.url }}">
+                <span class="module-card__index">MODULE / {{ forloop.counter|stringformat:"02d" }}</span>
+                <h3>{{ module.name }}</h3>
+                <p>{{ module.description }}</p>
+                <span class="module-card__link">Open application <span aria-hidden="true">&#8594;</span></span>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

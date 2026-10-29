@@ -1,0 +1,8 @@
+{% extends "portfolio/base.html" %}
+
+{% block primary_navigation %}
+<ul>
+    <li><a href="{% url 'home' %}">MJOS Home</a></li>
+    <li><a href="{% url 'db_home' %}" {% if request.resolver_match.url_name == 'db_home' or request.resolver_match.url_name == 'create' or request.resolver_match.url_name == 'update' %}aria-current="page"{% endif %}>Product inventory</a></li>
+</ul>
+{% endblock %}

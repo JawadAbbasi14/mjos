@@ -1,0 +1,14 @@
+{% extends "portfolio/base.html" %}
+
+{% block primary_navigation %}
+<ul>
+    <li><a href="{% url 'home' %}">MJOS Home</a></li>
+    <li><a href="{% url 'portfolio_home' %}" {% if request.resolver_match.url_name == 'portfolio_home' %}aria-current="page"{% endif %}>Portfolio</a></li>
+    <li><a href="{% url 'about' %}" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>About</a></li>
+    <li><a href="{% url 'education' %}" {% if request.resolver_match.url_name == 'education' %}aria-current="page"{% endif %}>Education</a></li>
+    <li><a href="{% url 'experience' %}" {% if request.resolver_match.url_name == 'experience' %}aria-current="page"{% endif %}>Experience</a></li>
+    <li><a href="{% url 'certifications' %}" {% if request.resolver_match.url_name == 'certifications' %}aria-current="page"{% endif %}>Certifications</a></li>
+    <li><a href="{% url 'services' %}" {% if request.resolver_match.url_name == 'services' %}aria-current="page"{% endif %}>Services</a></li>
+    <li><a href="{% url 'cv' %}" {% if request.resolver_match.url_name == 'cv' %}aria-current="page"{% endif %}>CV</a></li>
+</ul>
+{% endblock %}

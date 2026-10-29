@@ -1,115 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MJOS-Database</title>
-    <style>
-    /* 1995 Vintage Theme Styling */
-    body {
-        background-color: #c0c0c0; /* Windows 95 classic gray background */
-        font-family: "Times New Roman", Times, serif;
-        color: #000000;
-        margin: 20px;
-    }
+{% extends "db_lab/app_base.html" %}
+{% block title %}Database Lab | MJOS{% endblock %}
+{% block content %}
+<div class="database-page">
+    <header class="database-page__header">
+        <div>
+            <p class="portfolio-page__eyebrow">Database Lab / Product Records</p>
+            <h1>Product Inventory</h1>
+            <p>Records managed by the Database Lab.</p>
+        </div>
+        <a class="btn" href="{% url 'create' %}">Add product</a>
+    </header>
 
-    h1 {
-        color: #000080; /* Navy Blue header - classic windows title bar color */
-        border-bottom: 2px solid #808080;
-        padding-bottom: 5px;
-    }
-
-    /* Solid Action Link styled like an old-school button */
-    a {
-        display: inline-block;
-        background-color: #dcdcdc;
-        color: #000000;
-        padding: 5px 10px;
-        text-decoration: none;
-        border-top: 2px solid #ffffff;
-        border-left: 2px solid #ffffff;
-        border-right: 2px solid #808080;
-        border-bottom: 2px solid #808080;
-        font-weight: bold;
-        font-size: 14px;
-    }
-
-    a:active {
-        border-top: 2px solid #808080;
-        border-left: 2px solid #808080;
-        border-right: 2px solid #ffffff;
-        border-bottom: 2px solid #ffffff;
-    }
-
-    /* Grid Table with proper old school borders */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-        background-color: #ffffff;
-        border: 3px double #000000; /* Double line border for vintage look */
-    }
-
-    th {
-        background-color: #808080;
-        color: #ffffff;
-        text-align: left;
-        padding: 8px;
-        font-weight: bold;
-        border: 1px solid #000000;
-    }
-
-    td {
-        padding: 8px;
-        border: 1px solid #808080;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f0f0f0; /* Alternating row colors */
-    }
-</style>
-
-</head>
-<body>
-    <h1>Welcome to MJOS LAB!</h1>
-    <br><br>
-    <a href="{%url 'create'%}">Add Product</a>
-<br><br>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Description</th>
-                <th>Updated</th>
-            </tr>
-        </thead>
-        <tbody>
-    <!-- Loop shuru ho raha hai -->
-    {% for p in products %}
-    <tr>
-        <td>{{ p.name }}</td>
-        <td>{{ p.price }}</td>
-        <td>{{ p.quantity }}</td>
-        <td>{{ p.description }}</td>
-        <td>{{ p.updated_at }}</td>
-    </tr>
-    
-    <!-- Agar database mein koi product nahi hoga (Khali hoga), to yeh chalega -->
-    {% empty %}
-    <tr>
-        <td colspan="3" style="text-align: center;"><h2>Database is Empty!</h2></td>
-    </tr>
-    {% endfor %}
-</tbody>
-
-    </table>
-    
-  
-
-
-
-
-</body>
+    <div class="table-frame">
+        <div class="table-scroll">
+            <table class="data">
+                <caption class="sr-only">Product records and available actions</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Updated</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in products %}
+                    <tr>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.price }}</td>
+                        <td>{{ p.quantity }}</td>
+                        <td>{{ p.description }}</td>
+                        <td>{{ p.updated_at|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <div class="table-actions">
+                                <a href="{% url 'update' p.id %}">Edit</a>
+                                <a class="danger-link" href="{% url 'delete' p.id %}" onclick="return confirm('Delete this product?');">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="table-empty" colspan="6">No product records yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
 </html>

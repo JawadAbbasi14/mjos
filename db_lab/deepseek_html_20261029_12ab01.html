@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MJOS — Computer Science Lab & Portfolio</title>
+<meta name="description" content="MJOS is a personal Computer Science practice — a place to keep projects, practise CRUD, prototype interfaces and take notes. This page is a static prototype; no real records are stored.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=Special+Elite&display=swap" rel="stylesheet">
+
+<!-- FOUC guard: apply saved theme before body paints -->
+<script>
+(function(){
+  try {
+    var t = localStorage.getItem('mjos-theme');
+    if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      t = 'dark';
+    }
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  } catch(e){}
+})();
+</script>
+
+<noscript>
+  <style>
+    .reveal{opacity:1!important;transform:none!important}
+    .theme-toggle{display:none!important}
+  </style>
+</noscript>
+
+<style>
+/* ============================================================
+   MJOS — Design Tokens
+   Editorial light theme is primary; terminal dark theme is a
+   deliberate hybrid of vintage computing + restrained CLI.
+   ============================================================ */
+:root{
+  color-scheme: light;
+
+  /* ---- light palette (vintage editorial) ---- */
+  --paper:#f3ead9;
+  --paper-2:#ece0cb;
+  --paper-3:#e3d5bb;
+  --surface:#f9f3e7;
+  --surface-2:#f8f1e3;
+  --ink:#231c15;
+  --ink-2:#4a3d30;
+  --ink-3:#7a6a56;
+  --rule:#c0ac8c;
+  --rule-2:#d6c6a9;
+  --oxblood:#7b3029;
+  --gold:#9a7c43;
+  --ok:#5e7a4f;
+  --ok-bg:rgba(94,122,79,.12);
+  --warn:#9a7c43;
+  --warn-bg:rgba(154,124,67,.14);
+  --band:#231c15;
+  --band-fg:#e6d8bf;
+
+  /* ---- terminal (kept consistent in both modes) ---- */
+  --term-bg:#1c1815;
+  --term-fg:#e6ddc8;
+  --term-dim:#8a8472;
+  --term-accent:#d4a84b;
+  --term-ok:#8dc79a;
+  --term-rule:#322b22;
+
+  /* ---- typography ---- */
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --body:'EB Garamond',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+  --typewriter:'Special Elite','Courier New',monospace;
+
+  --maxw:1180px;
+  --gut:clamp(1.25rem,4vw,3.5rem);
+}
+
+/* ---------- reset / base ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;
+  background-color:var(--paper);
+  background-image:radial-gradient(130% 95% at 50% 0%,#f9f2e4 0%,#f1e6d3 48%,#e7d9c1 100%);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:17px;
+  line-height:1.7;
+  font-kerning:normal;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+[hidden]{display:none!important}
+::selection{background:var(--ink);color:var(--paper)}
+
+/* ---------- subtle paper grain + vignette ---------- */
+.grain{
+  position:fixed;inset:0;z-index:9000;pointer-events:none;
+  opacity:.42;mix-blend-mode:multiply;
+  background-size:180px 180px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:8999;pointer-events:none;
+  background:radial-gradient(125% 100% at 50% 45%,transparent 55%,rgba(60,45,30,.09) 100%);
+}
+
+/* ---------- shared ---------- */
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:var(--gut)}
+.label{
+  font-family:var(--body);
+  font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--gold);margin:0;
+}
+.rule-orn{
+  display:flex;align-items:center;gap:1rem;
+  color:var(--gold);font-size:.8rem;margin:1.9rem 0;
+}
+.rule-orn::before,.rule-orn::after{content:'';height:1px;background:var(--rule);flex:1}
+
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:10000;
+  background:var(--ink);color:var(--paper);padding:.7rem 1.2rem;
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;
+}
+.skip:focus{left:1rem;top:1rem}
+
+:where(a,button,input,select,textarea):focus-visible{
+  outline:2px solid var(--oxblood);
+  outline-offset:3px;
+}
+
+/* ---------- topbar ---------- */
+.topbar{
+  background:var(--band);
+  color:var(--band-fg);
+  font-family:var(--mono);
+  font-size:.63rem;letter-spacing:.18em;text-transform:uppercase;
+}
+.topbar .wrap{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:1rem;min-height:42px;flex-wrap:wrap;
+}
+.topbar p{margin:0;display:inline-flex;align-items:center;gap:.55rem}
+.topbar a{text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s,color .3s}
+.topbar a:hover{border-bottom-color:var(--gold);color:var(--gold)}
+.topbar-right{display:flex;align-items:center;gap:1.1rem}
+
+/* status dot */
+.dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--ok);display:inline-block;flex:none;
+  box-shadow:0 0 0 2px var(--ok-bg);
+}
+
+/* ---------- theme toggle ---------- */
+.theme-toggle{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:transparent;
+  border:1px solid rgba(230,216,191,.28);
+  color:var(--band-fg);
+  padding:.32rem .7rem;
+  font-family:var(--mono);
+  font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
+  cursor:pointer;
+  transition:border-color .3s, color .3s, background-color .3s;
+}
+.theme-toggle:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+}
+.theme-toggle .icon{font-size:.85rem;line-height:1}
+
+/* ---------- masthead ---------- */
+.masthead{
+  padding-top:clamp(1.8rem,4.5vw,3rem);
+  text-align:center;
+  border-bottom:1px solid var(--rule);
+  background:linear-gradient(180deg,rgba(255,252,246,.5),transparent 70%);
+}
+.masthead .pre{
+  font-family:var(--body);
+  font-size:.63rem;letter-spacing:.44em;text-transform:uppercase;
+  color:var(--gold);margin:0 0 1rem;
+}
+.wordmark{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.9rem,8.5vw,5.4rem);
+  letter-spacing:.28em;text-indent:.28em;line-height:1;margin:0;
+}
+.wordmark-sub{
+  margin:.9rem 0 0;
+  font-family:var(--mono);
+  font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);
+}
+.nav{margin-top:clamp(1.5rem,3.2vw,2.3rem);border-top:1px solid var(--rule-2)}
+.nav ul{
+  display:flex;justify-content:center;flex-wrap:wrap;
+  gap:clamp(1.1rem,3vw,2.9rem);
+  list-style:none;margin:0;padding:1.05rem 0;
+}
+.nav a{
+  position:relative;padding-bottom:.4rem;
+  font-family:var(--mono);
+  font-size:.63rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-2);text-decoration:none;transition:color .3s;
+}
+.nav a::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--ink);transform:scaleX(0);transform-origin:left;
+  transition:transform .4s cubic-bezier(.2,.7,.3,1);
+}
+.nav a:hover{color:var(--ink)}
+.nav a:hover::after{transform:scaleX(1)}
+
+/* ---------- hero ---------- */
+.hero{padding-block:clamp(3rem,7vw,5.5rem)}
+.hero .wrap{
+  display:grid;grid-template-columns:1.05fr .95fr;
+  gap:clamp(2.2rem,5vw,4.5rem);align-items:center;
+}
+.hero h1{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(2.4rem,5vw,4.2rem);
+  line-height:1.04;letter-spacing:-.005em;margin:.9rem 0 0;
+}
+.hero h1 em{font-style:italic;color:var(--oxblood)}
+.lede{
+  max-width:38ch;margin:0;
+  font-size:clamp(1rem,1.35vw,1.08rem);line-height:1.85;color:var(--ink-2);
+}
+.hero-actions{display:flex;align-items:center;gap:1.7rem;flex-wrap:wrap;margin-top:2.1rem}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.7rem;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;
+  padding:1rem 1.9rem;border:1px solid var(--ink);
+  background:var(--ink);color:var(--paper);
+  cursor:pointer;text-decoration:none;
+  transition:background .35s ease,border-color .35s ease,color .35s ease;
+}
+.btn:hover{background:var(--oxblood);border-color:var(--oxblood);color:#f8f1e3}
+.btn-ghost{background:transparent;color:var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-sm{padding:.62rem 1.15rem;font-size:.6rem;letter-spacing:.18em}
+
+.link-quiet{
+  display:inline-block;background:none;border:0;padding:0 0 .32rem;
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;cursor:pointer;
+  border-bottom:1px solid var(--rule);transition:border-color .3s,color .3s;
+}
+.link-quiet:hover{border-bottom-color:var(--ink);color:var(--oxblood)}
+
+/* ---------- engraved plate ---------- */
+.plate{position:relative}
+.plate-frame{
+  border:1px solid var(--ink);padding:10px;
+  background:linear-gradient(180deg,#f8f1e3,#efe4d0);
+}
+.plate-inner{
+  border:1px solid var(--rule);
+  background:var(--surface);
+  padding:clamp(1rem,2.6vw,1.7rem);
+}
+.plate-art{width:100%;height:auto}
+.plate-cap{
+  margin:.95rem 0 0;text-align:center;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-3);
+}
+.seal{
+  position:absolute;left:-26px;bottom:38px;
+  width:104px;height:104px;border-radius:50%;
+  display:grid;place-content:center;text-align:center;
+  background:radial-gradient(circle at 34% 28%,#96382f,#6d2822 62%,#571e19);
+  color:#f2e2cd;
+  border:1px solid #4d1a15;
+  box-shadow:0 10px 22px -14px rgba(60,20,15,.9),inset 0 0 0 4px rgba(242,226,205,.16),
+             inset 0 0 18px rgba(0,0,0,.35);
+  transform:rotate(-8deg);
+  font-family:var(--serif);
+}
+.seal span{
+  display:block;font-size:1.15rem;letter-spacing:.24em;text-indent:.24em;line-height:1.2;
+}
+.seal small{
+  display:block;margin-top:.28rem;
+  font-family:var(--mono);font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;
+  opacity:.85;
+}
+
+/* ---------- ribbon / ticker ---------- */
+.ribbon{
+  overflow:hidden;background:var(--band);color:var(--band-fg);
+  border-block:1px solid rgba(0,0,0,.35);
+}
+.ribbon-track{display:flex;width:max-content;animation:marquee 52s linear infinite}
+.ribbon-track span{
+  display:inline-flex;align-items:center;gap:1.4rem;
+  padding:.95rem 1.4rem;white-space:nowrap;
+  font-family:var(--mono);
+  font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;
+}
+.ribbon i{color:var(--gold);font-style:normal;font-size:.7rem}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- section head ---------- */
+.section{padding-block:clamp(3.2rem,6.5vw,5.5rem)}
+.sec-head{text-align:center;max-width:700px;margin:0 auto clamp(2.2rem,4.5vw,3.4rem)}
+.sec-head .numeral{
+  display:inline-flex;align-items:center;gap:1.1rem;
+  font-family:var(--mono);
+  font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);
+}
+.sec-head .numeral::before,.sec-head .numeral::after{
+  content:'';width:42px;height:1px;background:var(--rule);
+}
+.sec-head h2{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(1.9rem,4vw,2.9rem);line-height:1.1;
+  margin:1.05rem 0 .85rem;
+}
+.sec-head p{
+  margin:0;color:var(--ink-3);font-size:.96rem;line-height:1.8;
+}
+
+/* ---------- overview stat cards ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.9rem,1.8vw,1.4rem)}
+.stat{
+  position:relative;padding:clamp(1.3rem,2.6vw,1.9rem);
+  border:1px solid var(--rule);
+  background:linear-gradient(180deg,var(--surface-2),#f0e6d2);
+}
+.stat::before{
+  content:'';position:absolute;inset:6px;border:1px solid var(--rule-2);
+  pointer-events:none;opacity:.75;
+}
+.stat-label{
+  font-family:var(--mono);
+  font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold);margin:0 0 .55rem;
+}
+.stat-value{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(1.9rem,3.6vw,2.5rem);line-height:1;
+  margin:0 0 .5rem;letter-spacing:.01em;
+}
+.stat-note{
+  margin:0;font-size:.84rem;color:var(--ink-3);line-height:1.6;
+}
+
+/* ---------- project cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,2vw,1.7rem)}
+.card{
+  position:relative;text-align:left;
+  border:1px solid var(--rule);
+  background:linear-gradient(180deg,var(--surface-2),#f0e6d2);
+  padding:clamp(1.4rem,2.8vw,2rem);
+  display:flex;flex-direction:column;
+  transition:transform .4s cubic-bezier(.2,.7,.3,1),border-color .4s,box-shadow .4s;
+}
+.card::before{
+  content:'';position:absolute;inset:6px;border:1px solid var(--rule-2);
+  pointer-events:none;opacity:.75;transition:opacity .4s;
+}
+.card:hover{transform:translateY(-4px);border-color:var(--ink-3);box-shadow:0 22px 34px -28px rgba(35,28,21,.75)}
+.card:hover::before{opacity:1}
+.card-no{
+  font-family:var(--mono);
+  font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold);margin:0;
+}
+.card h3{
+  font-family:var(--serif);font-weight:400;font-size:1.5rem;line-height:1.2;
+  margin:.55rem 0 .55rem;
+}
+.card p.desc{margin:0 0 1.2rem;color:var(--ink-3);font-size:.92rem;line-height:1.75;flex:1}
+.card-meta{
+  display:flex;align-items:center;justify-content:space-between;gap:.8rem;
+  margin-top:auto;padding-top:.9rem;border-top:1px dotted var(--rule);
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-3);
+}
+.card-meta .stack{color:var(--ink-2)}
+
+/* ---------- status badges ---------- */
+.badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:.22rem .5rem;border:1px solid currentColor;
+}
+.badge .dot{width:5px;height:5px;box-shadow:none;background:currentColor}
+.badge--ok{color:var(--ok);background:var(--ok-bg)}
+.badge--warn{color:var(--warn);background:var(--warn-bg)}
+.badge--mute{color:var(--ink-3);background:transparent}
+
+/* ---------- data table ---------- */
+.table-frame{
+  border:1px solid var(--ink);
+  background:linear-gradient(180deg,var(--surface),var(--paper-2));
+  padding:clamp(.7rem,2vw,1.2rem);
+  position:relative;
+}
+.table-frame::before{
+  content:'';position:absolute;inset:5px;border:1px solid var(--rule-2);
+  pointer-events:none;opacity:.6;
+}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.data{
+  width:100%;border-collapse:collapse;
+  font-family:var(--mono);font-size:.78rem;
+  min-width:640px;
+}
+table.data caption{
+  text-align:left;font-family:var(--body);
+  font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-3);padding:.2rem 0 .9rem;
+  caption-side:top;
+}
+table.data th{
+  text-align:left;padding:.72rem .85rem;
+  font-family:var(--mono);font-weight:500;
+  font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-3);
+  border-bottom:1px solid var(--ink-3);
+  background:transparent;
+}
+table.data td{
+  padding:.78rem .85rem;
+  border-bottom:1px solid var(--rule-2);
+  color:var(--ink-2);
+  vertical-align:middle;
+}
+table.data tr:last-child td{border-bottom:0}
+table.data td.rec{color:var(--ink);font-weight:500}
+table.data td.id{color:var(--gold)}
+table.data .row-actions{
+  display:flex;gap:.55rem;flex-wrap:wrap;
+}
+.row-actions button{
+  background:none;border:0;padding:0 0 .16rem;cursor:pointer;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-2);
+  border-bottom:1px solid var(--rule);
+  transition:color .25s,border-color .25s;
+}
+.row-actions button:hover{color:var(--oxblood);border-bottom-color:var(--oxblood)}
+.row-actions button[data-act="delete"]:hover{color:#a12a1f}
+
+.table-note{
+  margin:1rem 0 0;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);
+}
+
+/* ---------- split panel: form + console ---------- */
+.split{
+  display:grid;grid-template-columns:1.05fr .95fr;
+  gap:clamp(1.4rem,3vw,2.4rem);align-items:start;
+}
+
+/* ---------- register form ---------- */
+.reg-frame{
+  position:relative;
+  border:1px solid var(--ink);
+  background:linear-gradient(180deg,var(--surface),#f2e8d6);
+  padding:clamp(1.4rem,3.5vw,2.6rem);
+}
+.reg-frame::before{
+  content:'';position:absolute;inset:7px;border:1px solid var(--rule);
+  pointer-events:none;
+}
+.reg-head{
+  position:relative;
+  padding-bottom:1.3rem;
+  border-bottom:1px solid var(--rule-2);
+}
+.reg-head .numeral{
+  display:inline-flex;align-items:center;gap:.9rem;
+  font-family:var(--mono);
+  font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);
+}
+.reg-head h2{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(1.6rem,3.4vw,2.2rem);line-height:1.15;margin:.75rem 0 .55rem;
+}
+.reg-head p.sub{margin:0;color:var(--ink-3);font-size:.9rem;max-width:48ch}
+.stamp{
+  position:absolute;top:0;right:0;
+  border:1px solid var(--oxblood);color:var(--oxblood);
+  padding:.35rem .65rem;transform:rotate(5deg);
+  font-family:var(--typewriter);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;
+  opacity:.8;
+}
+
+.form-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1.3rem 1.6rem;margin-top:1.8rem;
+}
+.field{display:flex;flex-direction:column;gap:.4rem}
+.span-2{grid-column:1 / -1}
+.field label{
+  font-family:var(--mono);
+  font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);
+}
+.field input,.field select,.field textarea{
+  width:100%;
+  font-family:var(--body);font-size:1rem;color:var(--ink);
+  background:transparent;border:0;border-bottom:1px solid var(--rule);
+  border-radius:0;padding:.42rem 0;outline:none;
+  transition:border-color .3s ease;
+}
+.field textarea{resize:vertical;min-height:76px;line-height:1.7}
+.field input::placeholder,.field textarea::placeholder{
+  font-style:italic;color:#a4947d;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-bottom-color:var(--ink)}
+.field select{
+  appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:1.6rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%239a7c43' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .2rem center;
+}
+
+/* checkboxes */
+.check{
+  position:relative;display:inline-flex;align-items:flex-start;gap:.7rem;
+  cursor:pointer;font-size:.92rem;color:var(--ink-2);line-height:1.65;
+}
+.check input{position:absolute;opacity:0;width:0;height:0}
+.check .box{
+  flex:none;width:15px;height:15px;border:1px solid var(--rule);
+  display:grid;place-items:center;transition:background .25s,border-color .25s;
+  margin-top:.2rem;
+}
+.check .box::after{
+  content:'';width:7px;height:4px;margin-top:-2px;
+  border-left:1.5px solid var(--paper);border-bottom:1.5px solid var(--paper);
+  transform:rotate(-45deg) scale(0);transition:transform .2s ease;
+}
+.check input:checked + .box{background:var(--ink);border-color:var(--ink)}
+.check input:checked + .box::after{transform:rotate(-45deg) scale(1)}
+.check:hover .box{border-color:var(--ink-3)}
+.check input:focus-visible + .box{outline:2px solid var(--oxblood);outline-offset:3px}
+
+.consent{margin-top:1.5rem}
+
+.form-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:1.2rem;flex-wrap:wrap;
+  margin-top:1.9rem;padding-top:1.4rem;border-top:1px solid var(--rule-2);
+}
+.fine{
+  margin:0;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;
+  color:var(--ink-3);line-height:1.7;text-transform:none;
+}
+
+/* feedback message */
+.feedback{
+  margin-top:1.2rem;padding:.85rem 1rem;
+  border:1px solid var(--ok);background:var(--ok-bg);
+  color:var(--ink);font-family:var(--mono);font-size:.72rem;
+  letter-spacing:.06em;line-height:1.6;
+}
+.feedback strong{display:block;letter-spacing:.16em;text-transform:uppercase;font-size:.6rem;color:var(--ok);margin-bottom:.25rem}
+
+/* ---------- console / terminal ---------- */
+.console{
+  border:1px solid var(--term-rule);
+  background:var(--term-bg);
+  color:var(--term-fg);
+  font-family:var(--mono);font-size:.76rem;line-height:1.75;
+  overflow:hidden;
+}
+.console-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.6rem .9rem;
+  border-bottom:1px solid var(--term-rule);
+  font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--term-dim);
+}
+.console-bar .lights{display:inline-flex;gap:.35rem}
+.console-bar .lights i{
+  width:8px;height:8px;border-radius:50%;background:var(--term-rule);display:inline-block;
+}
+.console-body{
+  padding:1.1rem 1.15rem 1.3rem;
+  overflow-x:auto;
+}
+.console-body pre{
+  margin:0;white-space:pre;font-family:inherit;font-size:inherit;line-height:1.75;
+}
+.console .prompt{color:var(--term-accent)}
+.console .ok{color:var(--term-ok)}
+.console .dim{color:var(--term-dim)}
+.console .accent{color:var(--term-accent)}
+.console .cursor{
+  display:inline-block;width:.55em;height:1em;vertical-align:-.12em;
+  background:var(--term-ok);
+  animation:blink 1.15s steps(1) infinite;
+}
+@keyframes blink{50%{opacity:0}}
+
+.console-note{
+  margin:.9rem 0 0;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);
+}
+
+/* ---------- footer ---------- */
+.footer{
+  background:#14100b;color:#cdbb9d;
+  border-top:1px solid #0b0805;
+  padding-top:clamp(2.6rem,5vw,4rem);
+}
+.footer-grid{
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;
+  gap:clamp(1.6rem,4vw,3rem);
+  padding-bottom:clamp(2rem,4.5vw,3rem);
+}
+.footer h4{
+  font-family:var(--mono);font-weight:400;
+  font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--gold);margin:0 0 1rem;
+}
+.footer .f-wordmark{
+  font-family:var(--serif);font-size:1.7rem;letter-spacing:.26em;text-indent:.26em;
+  color:#f0e4cd;margin:0 0 .7rem;
+}
+.footer .f-sub{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.24em;
+  text-transform:uppercase;color:#8d7d65;margin:0 0 1rem;
+}
+.footer p{margin:0;font-size:.84rem;line-height:1.8;color:#a9977b}
+.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
+.footer li a{
+  font-size:.84rem;color:#c6b393;text-decoration:none;
+  border-bottom:1px solid transparent;transition:color .3s,border-color .3s;
+}
+.footer li a:hover{color:#f2e6cf;border-bottom-color:var(--gold)}
+.footer-bottom{
+  border-top:1px solid rgba(205,187,157,.16);
+  padding-block:1.3rem;
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;
+  font-family:var(--mono);
+  font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#8d7d65;
+}
+.footer-bottom a{text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s,color .3s}
+.footer-bottom a:hover{color:#f2e6cf;border-bottom-color:var(--gold)}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.3,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ============================================================
+   DARK THEME — vintage computing archive + restrained terminal
+   ============================================================ */
+[data-theme="dark"]{
+  color-scheme: dark;
+
+  --paper:#0d1210;
+  --paper-2:#121815;
+  --paper-3:#161d19;
+  --surface:#121815;
+  --surface-2:#161d19;
+
+  --ink:#e6ddc8;
+  --ink-2:#c2b89f;
+  --ink-3:#8a8472;
+
+  --rule:#2c342e;
+  --rule-2:#3a4440;
+
+  --oxblood:#b85448;
+  --gold:#c9a24a;
+  --ok:#7fbf8b;
+  --ok-bg:rgba(127,191,139,.10);
+  --warn:#c9a24a;
+  --warn-bg:rgba(201,162,74,.10);
+
+  --band:#070b09;
+  --band-fg:#c8d0c4;
+
+  --term-bg:#060a08;
+  --term-fg:#d8e0d4;
+  --term-dim:#6f7a70;
+  --term-accent:#d4a84b;
+  --term-ok:#7fbf8b;
+  --term-rule:#1e2622;
+}
+
+[data-theme="dark"] body{
+  background-color:var(--paper);
+  background-image:radial-gradient(130% 95% at 50% 0%,#131a16 0%,#0c1210 48%,#070b09 100%);
+}
+[data-theme="dark"] body::after{
+  background:radial-gradient(125% 100% at 50% 45%,transparent 48%,rgba(0,0,0,.55) 100%);
+}
+
+/* subtle CRT scanlines — dark only, very restrained */
+[data-theme="dark"] body::before{
+  content:'';
+  position:fixed;inset:0;
+  z-index:8998;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(220,228,214,.022) 0px,
+    rgba(220,228,214,.022) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+[data-theme="dark"] .grain{opacity:.18;mix-blend-mode:screen}
+
+/* masthead, plate, cards, forms */
+[data-theme="dark"] .masthead{
+  background:linear-gradient(180deg,rgba(30,38,32,.6),transparent 70%);
+}
+[data-theme="dark"] .plate-frame{
+  background:linear-gradient(180deg,#161d19,#0b100d);
+  border-color:var(--ink-3);
+}
+[data-theme="dark"] .plate-inner{background:#0f1411}
+
+/* flip engraving inks */
+[data-theme="dark"] .plate-art [stroke="#231c15"]{stroke:var(--ink)}
+[data-theme="dark"] .plate-art [stroke="#9a7c43"]{stroke:var(--gold)}
+[data-theme="dark"] .plate-art [fill="#231c15"]{fill:var(--ink)}
+[data-theme="dark"] .plate-art [fill="#7a6a56"]{fill:var(--ink-3)}
+
+/* seal — phosphor glow */
+[data-theme="dark"] .seal{
+  box-shadow:
+    0 10px 30px -14px rgba(184,84,72,.8),
+    0 0 24px rgba(184,84,72,.22),
+    inset 0 0 0 4px rgba(230,221,200,.10),
+    inset 0 0 18px rgba(0,0,0,.55);
+}
+
+/* headings: bone with a faint amber phosphor edge */
+[data-theme="dark"] .hero h1,
+[data-theme="dark"] .wordmark,
+[data-theme="dark"] .sec-head h2,
+[data-theme="dark"] .reg-head h2{
+  text-shadow:0 0 18px rgba(201,162,74,.10);
+}
+[data-theme="dark"] .hero h1 em{
+  text-shadow:0 0 20px rgba(184,84,72,.30);
+}
+
+[data-theme="dark"] .stat,
+[data-theme="dark"] .card{
+  background:linear-gradient(180deg,#161d19,#121815);
+}
+[data-theme="dark"] .card:hover{
+  box-shadow:0 22px 34px -28px rgba(0,0,0,.9);
+}
+[data-theme="dark"] .reg-frame{
+  background:linear-gradient(180deg,#161d19,#121815);
+}
+[data-theme="dark"] .table-frame{
+  background:linear-gradient(180deg,#121815,#0d1210);
+}
+[data-theme="dark"] table.data th{border-bottom-color:var(--rule-2)}
+[data-theme="dark"] table.data td{border-bottom-color:var(--rule)}
+[data-theme="dark"] .field input::placeholder,
+[data-theme="dark"] .field textarea::placeholder{color:#5a5e50}
+[data-theme="dark"] .footer{background:#070b09;border-top:1px solid var(--rule)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1024px){
+  .stats{grid-template-columns:1fr 1fr}
+  .split{grid-template-columns:1fr}
+}
+@media (max-width:980px){
+  .hero .wrap{grid-template-columns:1fr;gap:2.6rem}
+  .plate{max-width:420px;margin-inline:auto;width:100%}
+  .cards{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:680px){
+  body{font-size:16px}
+  .cards{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr;gap:1.2rem}
+  .stamp{display:none}
+  .seal{width:82px;height:82px;left:-12px;bottom:24px}
+  .seal span{font-size:.92rem}
+  .seal small{font-size:.44rem}
+  .topbar .wrap{justify-content:center;text-align:center}
+  .topbar-right{gap:.7rem}
+  .nav ul{gap:.9rem 1.4rem}
+  .form-foot{flex-direction:column;align-items:flex-start}
+  .btn{width:100%}
+}
+@media (max-width:440px){
+  .stats{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .ribbon-track span{font-size:.58rem;letter-spacing:.22em}
+  .theme-toggle .label{display:none}
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .reveal{opacity:1;transform:none}
+  .ribbon-track{animation:none}
+  .console .cursor{animation:none;opacity:1}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ══════════════ TOP BAR ══════════════ -->
+<div class="topbar">
+  <div class="wrap">
+    <p><span class="dot" aria-hidden="true"></span> MJOS · Lab</p>
+    <p>SYS · ONLINE</p>
+    <div class="topbar-right">
+      <a href="#contact">Contact</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to dark theme">
+        <span class="icon" aria-hidden="true">☾</span>
+        <span class="label">Night</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MASTHEAD ══════════════ -->
+<header class="masthead">
+  <div class="wrap">
+    <p class="pre">Computer Science · Lab &amp; Portfolio</p>
+    <h1 class="wordmark">MJOS</h1>
+    <p class="wordmark-sub">Systems · Data · Interfaces · Sample</p>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#lab">Database Lab</a></li>
+        <li><a href="#editor">Record Editor</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ══════════════ HERO ══════════════ -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="label">— Personal Practice · Sample Data —</p>
+        <h1>A small lab<br>for <em>considered</em><br>software.</h1>
+        <div class="rule-orn" aria-hidden="true">✦</div>
+        <p class="lede">
+          MJOS is a personal Computer Science practice — a place to keep
+          projects, practise CRUD, prototype interfaces and take notes on
+          the systems that hold them together. This page is a static
+          prototype; no real records are stored.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="#lab">Explore the Lab</a>
+          <a class="link-quiet" href="#console">Read the console</a>
+        </div>
+      </div>
+
+      <div class="plate reveal">
+        <div class="plate-frame">
+          <div class="plate-inner">
+            <svg class="plate-art" viewBox="0 0 420 520" role="img" aria-labelledby="plateTitle">
+              <title id="plateTitle">Engraved plate of the MJOS lab mark</title>
+              <g fill="none" stroke="#231c15" stroke-width="1">
+                <rect x="9" y="9" width="402" height="502"/>
+                <rect x="20" y="20" width="380" height="480" stroke-width="0.6" opacity="0.5"/>
+              </g>
+              <circle cx="210" cy="120" r="22" fill="none" stroke="#9a7c43" stroke-width="1"/>
+              <circle cx="210" cy="120" r="39" fill="none" stroke="#9a7c43"
+                      stroke-width="14" stroke-dasharray="1.6 13.71"/>
+              <path d="M122 428V268a88 88 0 0 1 176 0v160" fill="none" stroke="#231c15" stroke-width="1.2"/>
+              <path d="M134 428V272a76 76 0 0 1 152 0v156" fill="none" stroke="#231c15" stroke-width="0.6" opacity="0.55"/>
+              <text x="210" y="352" text-anchor="middle" fill="#231c15" stroke="none"
+                    font-family="'Cormorant Garamond',Georgia,serif" font-size="128">M</text>
+              <line x1="96" y1="428" x2="324" y2="428" stroke="#231c15" stroke-width="1.2"/>
+              <line x1="96" y1="420" x2="96" y2="436" stroke="#231c15" stroke-width="1"/>
+              <line x1="324" y1="420" x2="324" y2="436" stroke="#231c15" stroke-width="1"/>
+              <text x="210" y="474" text-anchor="middle" fill="#7a6a56" stroke="none"
+                    font-family="'IBM Plex Mono','Courier New',monospace" font-size="12"
+                    letter-spacing="5">SYS.V1.0</text>
+            </svg>
+          </div>
+        </div>
+        <div class="seal" aria-hidden="true">
+          <span>MJOS</span>
+          <small>SYS · READY</small>
+        </div>
+        <p class="plate-cap">Plate I — Systems Mark</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ RIBBON ══════════════ -->
+  <div class="ribbon" aria-hidden="true">
+    <div class="ribbon-track">
+      <span>
+        Python <i>✦</i> Django <i>✦</i> PostgreSQL <i>✦</i> Vanilla JavaScript
+        <i>✦</i> Linux <i>✦</i> Version Control <i>✦</i> Data Structures
+        <i>✦</i> Cryptography Practice <i>✦</i>
+      </span>
+      <span>
+        Python <i>✦</i> Django <i>✦</i> PostgreSQL <i>✦</i> Vanilla JavaScript
+        <i>✦</i> Linux <i>✦</i> Version Control <i>✦</i> Data Structures
+        <i>✦</i> Cryptography Practice <i>✦</i>
+      </span>
+    </div>
+  </div>
+
+  <!-- ══════════════ OVERVIEW ══════════════ -->
+  <section class="section" id="overview">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="numeral">I · Overview</span>
+        <h2>A short account of the lab.</h2>
+        <p>A concise summary of what this page currently demonstrates. All counts
+           and records are illustrative.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat reveal">
+          <p class="stat-label">Projects</p>
+          <p class="stat-value">03</p>
+          <p class="stat-note">Sample builds shown below.</p>
+        </div>
+        <div class="stat reveal">
+          <p class="stat-label">Experiments</p>
+          <p class="stat-value">07</p>
+          <p class="stat-note">Notes kept in progress.</p>
+        </div>
+        <div class="stat reveal">
+          <p class="stat-label">Records</p>
+          <p class="stat-value">04</p>
+          <p class="stat-note">Illustrative rows in the lab table.</p>
+        </div>
+        <div class="stat reveal">
+          <p class="stat-label">Console</p>
+          <p class="stat-value" style="font-size:clamp(1.3rem,2.6vw,1.7rem);letter-spacing:.16em">READY</p>
+          <p class="stat-note">Client-side only. No database attached.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ PROJECTS ══════════════ -->
+  <section class="section" id="projects">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="numeral">II · Projects</span>
+        <h2>Three illustrative builds.</h2>
+        <p>Sample project records. Each is a scaffold or practice exercise — not a
+           live deployment and not a claim of production use.</p>
+      </div>
+
+      <div class="cards">
+        <article class="card reveal">
+          <p class="card-no">№ 01 — Practice</p>
+          <h3>MJOS Ledger</h3>
+          <p class="desc">A small CRUD ledger scaffold for practising Django models,
+             views and forms. Routes, models and templates are illustrative.</p>
+          <div class="card-meta">
+            <span class="stack">Django · PostgreSQL</span>
+            <span class="badge badge--ok"><span class="dot"></span>Sample</span>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <p class="card-no">№ 02 — Experiments</p>
+          <h3>Cipher Bench</h3>
+          <p class="desc">Notes and small scripts on classical ciphers, hashing and
+             key exchange — studied for understanding, not for production use.</p>
+          <div class="card-meta">
+            <span class="stack">Python · CLI</span>
+            <span class="badge badge--warn"><span class="dot"></span>Draft</span>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <p class="card-no">№ 03 — Interfaces</p>
+          <h3>Archive Browser</h3>
+          <p class="desc">A static browser for notes and references, built with plain
+             HTML, CSS Grid and localStorage — no framework, no build step.</p>
+          <div class="card-meta">
+            <span class="stack">Vanilla JS · CSS Grid</span>
+            <span class="badge badge--mute"><span class="dot"></span>Sample</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ DATABASE LAB ══════════════ -->
+  <section class="section" id="lab">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="numeral">III · Database Lab</span>
+        <h2>Records &amp; CRUD practice.</h2>
+        <p>Illustrative rows demonstrating a CRUD interface. No real database is
+           connected and no data is saved.</p>
+      </div>
+
+      <div class="table-frame reveal">
+        <div class="table-scroll">
+          <table class="data">
+            <caption>Sample rows · read-only demonstration</caption>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Record</th>
+                <th scope="col">Stack</th>
+                <th scope="col">Status</th>
+                <th scope="col">Updated</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="id">#A-014</td>
+                <td class="rec">Ledger Entry Model</td>
+                <td>Django · PostgreSQL</td>
+                <td><span class="badge badge--ok"><span class="dot"></span>Live</span></td>
+                <td>2026-10-21</td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" data-act="view">View</button>
+                    <button type="button" data-act="edit">Edit</button>
+                    <button type="button" data-act="delete">Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="id">#A-013</td>
+                <td class="rec">Cipher Notes</td>
+                <td>Python</td>
+                <td><span class="badge badge--warn"><span class="dot"></span>Draft</span></td>
+                <td>2026-10-14</td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" data-act="view">View</button>
+                    <button type="button" data-act="edit">Edit</button>
+                    <button type="button" data-act="delete">Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="id">#A-012</td>
+                <td class="rec">Grid Layout Study</td>
+                <td>CSS</td>
+                <td><span class="badge badge--mute"><span class="dot"></span>Archived</span></td>
+                <td>2026-09-30</td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" data-act="view">View</button>
+                    <button type="button" data-act="edit">Edit</button>
+                    <button type="button" data-act="delete">Delete</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="id">#A-011</td>
+                <td class="rec">Auth Flow Sketch</td>
+                <td>Django</td>
+                <td><span class="badge badge--warn"><span class="dot"></span>Draft</span></td>
+                <td>2026-09-18</td>
+                <td>
+                  <div class="row-actions">
+                    <button type="button" data-act="view">View</button>
+                    <button type="button" data-act="edit">Edit</button>
+                    <button type="button" data-act="delete">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Sample rows only · actions are illustrative · no data is saved</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ RECORD EDITOR + CONSOLE ══════════════ -->
+  <section class="section" id="editor">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="numeral">IV · Record Editor</span>
+        <h2>Staging a record.</h2>
+        <p>A static form and console. Submitting shows an in-page confirmation —
+           nothing is sent to a server or saved anywhere.</p>
+      </div>
+
+      <div class="split">
+
+        <div class="reg-frame reveal">
+          <div class="reg-head">
+            <span class="numeral">Form · Demo</span>
+            <h2>New Record</h2>
+            <p class="sub">Particulars are illustrative. The form does not send or
+               store any information.</p>
+            <div class="stamp" aria-hidden="true">Demo · No Save</div>
+          </div>
+
+          <div id="form-wrap">
+            <form id="record-form" novalidate>
+              <div class="form-grid">
+                <div class="field span-2">
+                  <label for="title">Record Title</label>
+                  <input id="title" name="title" type="text"
+                         placeholder="e.g. Ledger Entry Model" required>
+                </div>
+
+                <div class="field">
+                  <label for="stack">Stack</label>
+                  <input id="stack" name="stack" type="text"
+                         placeholder="e.g. Django · PostgreSQL" required>
+                </div>
+
+                <div class="field">
+                  <label for="status">Status</label>
+                  <select id="status" name="status">
+                    <option>Draft</option>
+                    <option>Live</option>
+                    <option>Archived</option>
+                  </select>
+                </div>
+
+                <div class="field span-2">
+                  <label for="summary">Summary</label>
+                  <textarea id="summary" name="summary" rows="3"
+                            placeholder="A short note on what this record covers…"></textarea>
+                </div>
+              </div>
+
+              <label class="check consent">
+                <input type="checkbox" name="consent" required>
+                <span class="box"></span>
+                <span>I understand this is a demonstration form. It does not send or
+                  save information, and no real database is connected.</span>
+              </label>
+
+              <div class="form-foot">
+                <button class="btn" type="submit">Save Record</button>
+                <p class="fine">Client-side confirmation only.</p>
+              </div>
+            </form>
+
+            <div class="feedback" id="feedback" hidden role="status" aria-live="polite">
+              <strong>Record staged (demo)</strong>
+              Nothing was sent. This confirmation exists only in your browser.
+              <div style="margin-top:.55rem">
+                <button class="link-quiet" id="again" type="button">Compose another</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="console reveal" id="console">
+          <div class="console-bar">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span>mjos · console</span>
+          </div>
+          <div class="console-body">
+<pre><span class="prompt">$</span> mjos --status
+<span class="ok">●</span> lab ........ ready
+<span class="ok">●</span> theme ...... <span id="theme-label">light</span>
+<span class="ok">●</span> storage .... demo-only
+<span class="dim">●</span> database ... not connected
+
+<span class="prompt">$</span> mjos projects --list
+  #A-014  Ledger Entry Model     <span class="accent">Django</span>
+  #A-013  Cipher Notes           <span class="accent">Python</span>
+  #A-012  Grid Layout Study      <span class="accent">CSS</span>
+  #A-011  Auth Flow Sketch       <span class="accent">Django</span>
+
+<span class="prompt">$</span> mjos theme --toggle
+<span class="dim">[theme switched]</span>
+
+<span class="prompt">$</span> <span class="cursor" aria-hidden="true"></span></pre>
+          </div>
+        </div>
+      </div>
+
+      <p class="console-note">Sample output · no commands are executed · no server is contacted</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="footer" id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <p class="f-wordmark">MJOS</p>
+        <p class="f-sub">Computer Science · Lab</p>
+        <p>A personal practice. This page is a static prototype — sample data,
+           illustrative records and no live server.</p>
+      </div>
+
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#lab">Database Lab</a></li>
+          <li><a href="#editor">Record Editor</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Notes</h4>
+        <ul>
+          <li><a href="#console">Console</a></li>
+          <li><a href="#lab">Sample Rows</a></li>
+          <li><a href="#editor">Demo Form</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Correspondence</h4>
+        <ul>
+          <li><a href="mailto:hello@mjos.example">hello@mjos.example</a></li>
+          <li>Placeholder address — not a live inbox.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© <span id="year">2026</span> MJOS · static prototype</p>
+      <p>Sample data · no live server</p>
+      <p><a href="#main">Return to top ↑</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- current year ---------- */
+  var y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+
+  /* ---------- theme toggle ---------- */
+  var root     = document.documentElement;
+  var toggle   = document.getElementById('theme-toggle');
+  var themeLbl = document.getElementById('theme-label');
+
+  function syncThemeUI(isDark) {
+    if (toggle) {
+      var icon  = toggle.querySelector('.icon');
+      var label = toggle.querySelector('.label');
+      if (icon)  icon.textContent  = isDark ? '☀' : '☾';
+      if (label) label.textContent = isDark ? 'Day' : 'Night';
+      toggle.setAttribute('aria-label',
+        isDark ? 'Switch to light theme' : 'Switch to dark theme');
+    }
+    if (themeLbl) themeLbl.textContent = isDark ? 'dark' : 'light';
+  }
+
+  if (toggle) {
+    syncThemeUI(root.getAttribute('data-theme') === 'dark');
+
+    toggle.addEventListener('click', function () {
+      var isDark = root.getAttribute('data-theme') === 'dark';
+      var next   = isDark ? 'light' : 'dark';
+      if (next === 'dark') root.setAttribute('data-theme', 'dark');
+      else                 root.removeAttribute('data-theme');
+      syncThemeUI(next === 'dark');
+      try { localStorage.setItem('mjos-theme', next); } catch (e) {}
+    });
+  }
+
+  /* ---------- scroll reveal ---------- */
+  var items = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ---------- row action demo: gentle feedback, no data change ---------- */
+  document.querySelectorAll('.row-actions button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var act  = btn.getAttribute('data-act');
+      var row  = btn.closest('tr');
+      var id   = row ? row.querySelector('.id') : null;
+      var name = row ? row.querySelector('.rec') : null;
+      var ref  = (id ? id.textContent : 'row') + (name ? ' · ' + name.textContent : '');
+      /* replace any existing inline note */
+      document.querySelectorAll('.row-note').forEach(function (n) { n.remove(); });
+      var note = document.createElement('p');
+      note.className = 'table-note row-note';
+      note.setAttribute('role', 'status');
+      note.textContent = act.toUpperCase() + ' — illustrative only · ' + ref;
+      var frame = document.querySelector('.table-frame');
+      if (frame) frame.appendChild(note);
+    });
+  });
+
+  /* ---------- demo form ---------- */
+  var form     = document.getElementById('record-form');
+  var wrap     = document.getElementById('form-wrap');
+  var feedback = document.getElementById('feedback');
+  var again    = document.getElementById('again');
+
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        var firstInvalid = form.querySelector(':invalid');
+        if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+      form.hidden = true;
+      feedback.hidden = false;
+      feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  if (again) {
+    again.addEventListener('click', function () {
+      form.reset();
+      form.hidden = false;
+      feedback.hidden = true;
+      var t = document.getElementById('title');
+      if (t) t.focus();
+    });
+  }
+})();
+</script>
+</body>
+</html>

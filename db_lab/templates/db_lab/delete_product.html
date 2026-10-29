@@ -1,11 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MJOS | db - delete-product </title>
-</head>
-<body>
-    <h2>Hare you can delete any product!</h2>
-</body>
-</html>
+{% extends "db_lab/app_base.html" %}
+{% block title %}Product Deletion | Database Lab{% endblock %}
+
+{% block content %}
+<section class="database-page">
+    <header class="database-page__header">
+        <div>
+            <p class="portfolio-page__eyebrow">Database Lab / Product Records</p>
+            <h1>Product deletion</h1>
+            <p>Manage product records from the inventory list.</p>
+        </div>
+        <a class="btn" href="{% url 'db_home' %}">Return to product list</a>
+    </header>
+</section>
+{% endblock %}
